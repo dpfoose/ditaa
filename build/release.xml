@@ -12,9 +12,9 @@
     <property name="src.dir" value="${root.dir}/src"/>
     <property name="compile.classes.dir" value="${basedir}/jar-temp"/>
     <property name="releases.dir" value="${root.dir}/releases"/>
-    <property name="test.dir" value="${root.dir}/tests"/>
+    <property name="test.dir" value="../tests"/>
     <property name="test.images.dir" value="${test.dir}/images"/>
-    <property name="reference.images.dir" value="${test.dir}/images-expected"/>
+    <property name="reference.images.dir" value="../tests/images-expected-1"/>
     <property name="test.classes.dir" value="${basedir}/testclasses"/>
 
     <property name="release.jar" value="${releases.dir}/${versioned.name}.jar"/>
@@ -28,7 +28,7 @@
     </path>
 
     <path id="test.classpath">
-        <fileset dir="${root.dir}/tests/testlib">
+        <fileset dir="../tests/testlib">
             <include name="**.jar" />
         </fileset>
         <pathelement location="${compile.classes.dir}" />
