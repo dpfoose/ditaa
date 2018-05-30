@@ -35,6 +35,7 @@ import org.stathissideris.ascii2image.graphics.BitmapRenderer;
 import org.stathissideris.ascii2image.graphics.Diagram;
 import org.stathissideris.ascii2image.graphics.SVGRenderer;
 import org.stathissideris.ascii2image.text.TextGrid;
+import se.ngm.ditaaeps.EpsRenderer;
 
 /**
  *
@@ -104,6 +105,11 @@ public class CommandLineConverter {
 				.create()
 				);
 
+		cmdLnOptions.addOption(
+				OptionBuilder.withLongOpt("eps")
+						.withDescription( "Write an EPS image as destination file." )
+						.create()
+		);
 		cmdLnOptions.addOption(
 				OptionBuilder.withLongOpt("svg-font-url")
 				.withDescription( "SVG font URL." )
@@ -259,7 +265,11 @@ public class CommandLineConverter {
 
 					PrintStream stream = stdOut ? System.out : new PrintStream(new FileOutputStream(toFilename));
 					stream.print(content);
-				} else {
+				} else if (cmdLine.hasOption("eps")){
+					PrintWriter writer = new PrintWriter(toFilename);
+					EpsRenderer.renderToEps(diagram, writer, options.renderingOptions);
+				}
+				else {
 					RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);
 
 					OutputStream os = stdOut ? System.out : new FileOutputStream(toFilename);

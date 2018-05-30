@@ -267,7 +267,7 @@ public class EpsRenderer {
 
         //GeneralPath path = shape.makeIntoPath();
         GeneralPath path;
-        path = shape.makeIntoRenderPath(diagram);
+        path = shape.makeIntoRenderPath(diagram, options);
 
         float offset = diagram.getMinimumOfCellDimension() / 3.333f;
 
@@ -367,8 +367,7 @@ public class EpsRenderer {
       DiagramShape shape = (DiagramShape) shapesIt.next();
 
       GeneralPath path;
-      path = shape.makeIntoRenderPath(diagram);
-
+      path = shape.makeIntoRenderPath(diagram, options);
       if(!shape.isStrokeDashed()) {
         if(shape.getFillColor() != null)
           g2.setColor(shape.getFillColor());
@@ -405,7 +404,7 @@ public class EpsRenderer {
       int size = shape.getPoints().size();
 
       GeneralPath path;
-      path = shape.makeIntoRenderPath(diagram);
+      path = shape.makeIntoRenderPath(diagram, options);
 
       if(path != null && shape.isClosed() && !shape.isStrokeDashed()){
         if(shape.getFillColor() != null)
@@ -433,7 +432,7 @@ public class EpsRenderer {
       //if(shape.getType() != DiagramShape.TYPE_POINT_MARKER) continue;
 
       GeneralPath path;
-      path = shape.makeIntoRenderPath(diagram);
+      path = shape.makeIntoRenderPath(diagram, options);
 
       g2.setColor(Color.white);
       g2.fill(path);
