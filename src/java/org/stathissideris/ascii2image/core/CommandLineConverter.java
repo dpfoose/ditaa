@@ -28,7 +28,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 import org.stathissideris.ascii2image.graphics.BitmapRenderer;
@@ -157,6 +157,11 @@ public class CommandLineConverter {
 			System.exit(0);
 		}
 
+		if(cmdLine.hasOption("eps") && cmdLine.hasOption("svg")){
+		    System.err.println("Invalid options --svg and --eps. Must select only one file format");
+		    System.exit(1);
+        }
+
 		ConversionOptions options = null;
 		try {
 			options = new ConversionOptions(cmdLine);
@@ -260,24 +265,38 @@ public class CommandLineConverter {
 			Diagram diagram = new Diagram(grid, options);
 			if (!stdOut) System.out.println("Rendering to file: "+toFilename);
 
+			//Begin new file format inferrence
+			String fileFormat = "";
+			//SVG and EPS flags cannot be defined together
+            //intention is to deprecate this and prefer inferrence from extension
+            //but must retain this for compatibility
+			if (cmdLine.hasOption("svg")){
+			    fileFormat = "svg";
+            } else if (cmdLine.hasOption("eps")){
+			    fileFormat = "eps";
+            } else {
+                String fileExtension = FilenameUtils.getExtension(toFilename);
+                //check if the file extension is in the list of supported output formats
+                if (fileExtension.length() > 0 && ImageIO.getImageWritersBySuffix(fileExtension).hasNext()) {
+                    fileFormat = fileExtension;
+                } else {fileFormat = "png";} //this is the old expected behavior
+            }
 			try {
-
-				if(cmdLine.hasOption("svg")){
-					String content = new SVGRenderer().renderToImage(diagram, options.renderingOptions);
-
-					PrintStream stream = stdOut ? System.out : new PrintStream(new FileOutputStream(toFilename));
-					stream.print(content);
-				} else if (cmdLine.hasOption("eps")){
-					PrintWriter writer = new PrintWriter(toFilename);
-					EpsRenderer.renderToEps(diagram, writer, options.renderingOptions);
-				}
-				else {
-					RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);
-
-					OutputStream os = stdOut ? System.out : new FileOutputStream(toFilename);
-					ImageIO.write(image, "png", os);
-				}
-
+			    switch (fileFormat){
+                    case "svg":
+                        String content = new SVGRenderer().renderToImage(diagram, options.renderingOptions);
+                        PrintStream stream = stdOut ? System.out : new PrintStream(new FileOutputStream(toFilename));
+                        stream.print(content);
+                        break;
+                    case "eps":
+                        PrintWriter writer = new PrintWriter(toFilename);
+                        EpsRenderer.renderToEps(diagram, writer, options.renderingOptions);
+                        break;
+                    default:
+                        RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);
+                        OutputStream os = stdOut ? System.out : new FileOutputStream(toFilename);
+                        ImageIO.write(image, fileFormat, os);
+                }
 			} catch (IOException e) {
 				//e.printStackTrace();
 				System.err.println("Error: Cannot write to file "+toFilename);
