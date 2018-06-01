@@ -277,9 +277,10 @@ public class CommandLineConverter {
             } else {
                 String fileExtension = FilenameUtils.getExtension(toFilename);
                 //check if the file extension is in the list of supported output formats
-                if (fileExtension.length() > 0 && ImageIO.getImageWritersBySuffix(fileExtension).hasNext()) {
-                    fileFormat = fileExtension;
-                } else {fileFormat = "png";} //this is the old expected behavior
+                boolean extensionIsValid = fileExtension.equals("svg")
+                                || fileExtension.equals("eps")
+                                || (fileExtension.length() > 0 && ImageIO.getImageWritersBySuffix(fileExtension).hasNext());
+                fileFormat = extensionIsValid ? fileExtension : "png";
             }
 			try {
 			    switch (fileFormat){
