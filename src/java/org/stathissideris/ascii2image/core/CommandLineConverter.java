@@ -117,7 +117,7 @@ public class CommandLineConverter {
 				.withArgName("FONT")
 				.create()
 				);
-//TODO: infer output format by file extension (allow BMP, TIFF, PNG, JPG/JPEG, EPS)
+
 //TODO: uncomment this for next version:
 //		cmdLnOptions.addOption(
 //				OptionBuilder.withLongOpt("config")
