@@ -53,9 +53,11 @@ public class CommandLineConverter {
 
 		Options cmdLnOptions = new Options();
 		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("help")
-				.withDescription( "Prints usage help." )
-				.create() );
+				Option.builder().longOpt("help")
+                        .desc("Prints usage help.")
+                        .build()
+		);
+
 		cmdLnOptions.addOption("v", "verbose", false, "Makes ditaa more verbose.");
 		cmdLnOptions.addOption("o", "overwrite", false, "If the filename of the destination image already exists, an alternative name is chosen. If the overwrite option is selected, the image file is instead overwriten.");
 		cmdLnOptions.addOption("S", "no-shadows", false, "Turns off the drop-shadow effect.");
@@ -68,54 +70,54 @@ public class CommandLineConverter {
 		cmdLnOptions.addOption("T", "transparent", false, "Causes the diagram to be rendered on a transparent background. Overrides --background.");
 
 		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("encoding")
-				.withDescription("The encoding of the input file.")
+				Option.builder("e").longOpt("encoding")
+				.desc("The encoding of the input file.")
 				.hasArg()
-				.withArgName("ENCODING")
-				.create('e')
+				.argName("ENCODING")
+				.build()
+                );
+
+		cmdLnOptions.addOption(
+				Option.builder("s").longOpt("scale")
+				.desc("A natural number that determines the size of the rendered image. The units are fractions of the default size (2.5 renders 1.5 times bigger than the default).")
+				.hasArg()
+				.argName("SCALE")
+				.build()
+                );
+
+		cmdLnOptions.addOption(
+				Option.builder("t").longOpt("tabs")
+				.desc("Tabs are normally interpreted as 8 spaces but it is possible to change that using this option. It is not advisable to use tabs in your diagrams.")
+				.hasArg()
+				.argName("TABS")
+				.build()
 				);
 
 		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("scale")
-				.withDescription("A natural number that determines the size of the rendered image. The units are fractions of the default size (2.5 renders 1.5 times bigger than the default).")
+				Option.builder("b").longOpt("background")
+				.desc("The background colour of the image. The format should be a six-digit hexadecimal number (as in HTML, FF0000 for red). Pass an eight-digit hex to define transparency. This is overridden by --transparent.")
 				.hasArg()
-				.withArgName("SCALE")
-				.create('s')
+				.argName("BACKGROUND")
+				.build()
 				);
 
 		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("tabs")
-				.withDescription("Tabs are normally interpreted as 8 spaces but it is possible to change that using this option. It is not advisable to use tabs in your diagrams.")
-				.hasArg()
-				.withArgName("TABS")
-				.create('t')
+				Option.builder().longOpt("svg")
+				.desc( "Write an SVG image as destination file." )
+				.build()
 				);
 
 		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("background")
-				.withDescription("The background colour of the image. The format should be a six-digit hexadecimal number (as in HTML, FF0000 for red). Pass an eight-digit hex to define transparency. This is overridden by --transparent.")
+				Option.builder().longOpt("eps")
+						.desc( "Write an EPS image as destination file." )
+						.build()
+		        );
+		cmdLnOptions.addOption(
+				Option.builder().longOpt("svg-font-url")
+				.desc( "SVG font URL." )
 				.hasArg()
-				.withArgName("BACKGROUND")
-				.create('b')
-				);
-
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("svg")
-				.withDescription( "Write an SVG image as destination file." )
-				.create()
-				);
-
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("eps")
-						.withDescription( "Write an EPS image as destination file." )
-						.create()
-		);
-		cmdLnOptions.addOption(
-				OptionBuilder.withLongOpt("svg-font-url")
-				.withDescription( "SVG font URL." )
-				.hasArg()
-				.withArgName("FONT")
-				.create()
+				.argName("FONT")
+				.build()
 				);
 
 //TODO: uncomment this for next version:
