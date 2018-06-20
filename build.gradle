@@ -13,6 +13,11 @@ sourceSets {
             srcDir 'src/java'
         }
     }
+    test {
+        java {
+            srcDir 'test/java'
+        }
+    }
 }
 
 group 'edu.wright'
