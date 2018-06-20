@@ -40,7 +40,7 @@ dependencies {
 
 task fatJar(type: Jar){
     manifest {
-        attributes 'Main-Class': 'org.stathissideris.ascii2image.CommandLineConverter'
+        attributes 'Main-Class': 'org.stathissideris.ascii2image.core.CommandLineConverter'
     }
     baseName = project.name + '-all'
     from {configurations.compile.collect {it.isDirectory() ? it: zipTree(it)}}
@@ -49,6 +49,6 @@ task fatJar(type: Jar){
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.stathissideris.ascii2image.CommandLineConverter'
+        attributes 'Main-Class': 'org.stathissideris.ascii2image.core.CommandLineConverter'
     }
 }
