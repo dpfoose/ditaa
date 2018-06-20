@@ -23,7 +23,7 @@ sourceSets {
 group 'edu.wright'
 version '0.11'
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
