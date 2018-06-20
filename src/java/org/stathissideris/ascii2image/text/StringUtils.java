@@ -95,11 +95,11 @@ public class StringUtils {
 			if(Character.isUpperCase(string.charAt(j))) indexes[k++] = j;
 		}
 		
-		StringBuffer buffer = new StringBuffer("");
+		StringBuffer buffer = new StringBuffer();
 		//and finally we breakup the String
 		for(int i =0; i < indexes.length; i++){
 			if(i+1 < indexes.length){
-				buffer.append(string.substring(indexes[i], indexes[i+1]));
+				buffer.append(string, indexes[i], indexes[i+1]);
 				buffer.append(" ");
 			} else {
 				buffer.append(string.substring(indexes[i]));

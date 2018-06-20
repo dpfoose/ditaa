@@ -74,7 +74,7 @@ public class VisualTester {
 	}
 
 	@Test
-	public void compareImages() throws FileNotFoundException, IOException {
+	public void compareImages() throws IOException {
 		ConversionOptions options = new ConversionOptions();
 		File actualFile = new File(actualDir + File.separator + textFile.getName() + ".png");
 		File expectedFile = new File(expectedDir + File.separator + textFile.getName() + ".png");
@@ -148,14 +148,12 @@ public class VisualTester {
 			= new ArrayList<File>(Arrays.asList(textDirObj.listFiles()));
 	
 		Set<String> excludedFiles = new HashSet<String>();
-		excludedFiles.addAll( Arrays.asList(new String[]{
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.txt",
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.2.txt",
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.3.txt",
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.4.txt",
-			"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.edit.txt",
-			"dak_orgstruktur_vs_be.ditaa.txt"
-		}));
+		excludedFiles.addAll( Arrays.asList("dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.txt",
+				"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.2.txt",
+				"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.3.txt",
+				"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.4.txt",
+				"dak_orgstruktur_vs_be.ditaa.OutOfMemoryError.edit.txt",
+				"dak_orgstruktur_vs_be.ditaa.txt"));
 		
 		Iterator<File> it = textFiles.iterator();
 		while(it.hasNext()){

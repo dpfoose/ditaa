@@ -168,7 +168,7 @@ public class HTMLConverter extends HTMLEditorKit {
 		}
 		
 		for(String URL : diagramList.keySet()) {
-			String text = (String) diagramList.get(URL);
+			String text = diagramList.get(URL);
 			String imageFilename = new File(targetFilename).getParent() + File.separator + URL;
 			if(new File(imageFilename).exists() && !options.processingOptions.overwriteFiles()){
 				System.out.println("Error: Cannot overwrite file "+URL+", file already exists." +

@@ -138,7 +138,7 @@ public class CompositeDiagramShape extends DiagramComponent {
 			CellSet nextCells = workGrid.followCell(cell, previousCell);
 			if(nextCells.size() == 1) {
 				previousCell = cell;
-				cell = (TextGrid.Cell) nextCells.getFirst();
+				cell = nextCells.getFirst();
 				if(DEBUG) System.out.println("tracing at "+cell+" (call from line: "+DebugUtils.getLineNumber()+")");
 			} else if(nextCells.size() > 1 || nextCells.size() == 0) {//3- or 4- way intersection
 				finished = true;

@@ -69,7 +69,7 @@ public class ConfigurationParser {
 
     private class XMLHandler extends DefaultHandler {
         public void startElement(String uri, String localName, String qName,
-                Attributes attributes) throws SAXException {
+                Attributes attributes) {
             if (qName.equals(SHAPE_GROUP_TAG_NAME)) {
                 if (attributes.getLength() == 1) {
                     currentDir = attributes.getValue(0).trim();

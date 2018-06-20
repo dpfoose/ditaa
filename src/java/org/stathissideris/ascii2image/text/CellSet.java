@@ -78,7 +78,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 	
 	public TextGrid.Cell getFirst(){
 		//return internalSet.get(0);
-		return (TextGrid.Cell) internalSet.iterator().next();
+		return internalSet.iterator().next();
 	}
 	
 	public void printAsGrid(){
@@ -125,7 +125,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		
 		Iterator<TextGrid.Cell> it = set.iterator();
 		while (it.hasNext()) {
-			TextGrid.Cell cell = (TextGrid.Cell) it.next();
+			TextGrid.Cell cell = it.next();
 			TextGrid.Cell newCell = grid.new Cell(cell);
 			newSet.add(newCell);
 		}
@@ -189,7 +189,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		for(TextGrid.Cell cell : this)
 			if(workGrid.isLinesEnd(cell))
 				start = cell;
-		if(start == null) start = (TextGrid.Cell) getFirst();
+		if(start == null) start = getFirst();
 		
 		if (DEBUG)
 			System.out.println("Tracing:\nStarting at "+start+" ("+grid.getCellTypeAsString(start)+")");
@@ -197,7 +197,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		TextGrid.Cell cell = null;
 		CellSet nextCells = workGrid.followCell(previous);
 		if(nextCells.size() == 0) return TYPE_OPEN;
-		cell = (TextGrid.Cell) nextCells.getFirst();
+		cell = nextCells.getFirst();
 		if (DEBUG)
 			System.out.println("\tat cell "+cell+" ("+grid.getCellTypeAsString(cell)+")");
 
@@ -210,7 +210,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 				return TYPE_OPEN;
 			} if(nextCells.size() == 1) {
 				previous = cell;
-				cell = (TextGrid.Cell) nextCells.getFirst();
+				cell = nextCells.getFirst();
 				if (DEBUG)
 					System.out.println("\tat cell "+cell+" ("+grid.getCellTypeAsString(cell)+")");
 			} else if(nextCells.size() > 1) {
@@ -540,7 +540,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 		
 		Iterator<TextGrid.Cell> it = iterator();
 		while(it.hasNext()){
-			TextGrid.Cell cell = (TextGrid.Cell) it.next();
+			TextGrid.Cell cell = it.next();
 			if(boundaryGrid.isBlank(cell.x, cell.y)) continue;
 			CellSet boundarySet = boundaryGrid.fillContinuousArea(cell.x, cell.y, ' ');
 			//boundarySet.translate( this.getMinX() - 1, this.getMinY() - 1);
@@ -592,7 +592,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 
 		Iterator<TextGrid.Cell> it = iterator();
 		while(it.hasNext()){
-			TextGrid.Cell start = (TextGrid.Cell) it.next();
+			TextGrid.Cell start = it.next();
 			if(workGrid.isLinesEnd(start) && !visitedEnds.contains(start)){
 				
 				if (DEBUG)
@@ -607,7 +607,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 				CellSet nextCells = workGrid.followCell(previous);
 				if(nextCells.size() == 0)
 					throw new IllegalArgumentException("This shape is either open but multipart or has only one cell, and cannot be processed by this method");
-				cell = (TextGrid.Cell) nextCells.getFirst();
+				cell = nextCells.getFirst();
 				set.add(cell);
 				if(DEBUG) System.out.println("Added boundary "+cell);
 				
@@ -623,7 +623,7 @@ public class CellSet implements Iterable<TextGrid.Cell> {
 						set.add(cell);
 						if(DEBUG) System.out.println("Added boundary " + cell);
 						previous = cell;
-						cell = (TextGrid.Cell) nextCells.getFirst();
+						cell = nextCells.getFirst();
 						//if(!cell.equals(start) && grid.isPointCell(cell))
 						//	s.addToPoints(makePointForCell(cell, workGrid, cellWidth, cellHeight, allRound));
 						if(workGrid.isLinesEnd(cell)){

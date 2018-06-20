@@ -35,7 +35,7 @@ public class TextGridTest {
 	@Before public void setUp() {
 	}
 	
-	@Test public void testFillContinuousAreaSquareOutside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSquareOutside() throws IOException {
 		TextGrid squareGrid;
 		squareGrid = new TextGrid();
 		squareGrid.loadFrom("test-resources/text/simple_square01.txt");
@@ -52,7 +52,7 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaSquareInside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSquareInside() throws IOException {
 		TextGrid squareGrid;
 		squareGrid = new TextGrid();
 		squareGrid.loadFrom("test-resources/text/simple_square01.txt");
@@ -66,7 +66,7 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaUInside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaUInside() throws IOException {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
 		uGrid.loadFrom("test-resources/text/simple_U01.txt");
@@ -83,7 +83,7 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaUOutside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaUOutside() throws IOException {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
 		uGrid.loadFrom("test-resources/text/simple_U01.txt");
@@ -105,7 +105,7 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaSOutside() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSOutside() throws IOException {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
 		uGrid.loadFrom("test-resources/text/simple_S01.txt");
@@ -131,7 +131,7 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaSInside1() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSInside1() throws IOException {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
 		uGrid.loadFrom("test-resources/text/simple_S01.txt");
@@ -146,7 +146,7 @@ public class TextGridTest {
 		assertEquals(expectedFilledArea, filledArea);
 	}
 
-	@Test public void testFillContinuousAreaSInside2() throws FileNotFoundException, IOException {
+	@Test public void testFillContinuousAreaSInside2() throws IOException {
 		TextGrid uGrid;
 		uGrid = new TextGrid();
 		uGrid.loadFrom("test-resources/text/simple_S01.txt");
@@ -162,7 +162,7 @@ public class TextGridTest {
 	}
 
 	
-	@Test public void testFindBoundariesExpandingFromSquare() throws FileNotFoundException, IOException {
+	@Test public void testFindBoundariesExpandingFromSquare() throws IOException {
 		TextGrid grid;
 		grid = new TextGrid();
 		grid.loadFrom("test-resources/text/simple_square01.txt");
@@ -188,7 +188,7 @@ public class TextGridTest {
 
 	}
 
-	@Test public void testFindBoundariesExpandingFromUInside() throws FileNotFoundException, IOException {
+	@Test public void testFindBoundariesExpandingFromUInside() throws IOException {
 		TextGrid grid;
 		grid = new TextGrid();
 		grid.loadFrom("test-resources/text/simple_U01.txt");
@@ -224,7 +224,7 @@ public class TextGridTest {
 	}
 
 	
-	@Test public void testFindBoundariesExpandingFromUOutside() throws FileNotFoundException, IOException {
+	@Test public void testFindBoundariesExpandingFromUOutside() throws IOException {
 		TextGrid grid;
 		grid = new TextGrid();
 		grid.loadFrom("test-resources/text/simple_U01.txt");

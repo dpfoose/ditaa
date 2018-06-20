@@ -216,7 +216,7 @@ public class Diagram {
 		
 		Iterator<CellSet> sets = boundarySetsStep2.iterator();
 		while(sets.hasNext()){
-			CellSet set = (CellSet) sets.next();
+			CellSet set = sets.next();
 			int type = set.getType(workGrid);
 			if(type == CellSet.TYPE_CLOSED) closed.add(set);
 			else if(type == CellSet.TYPE_OPEN) open.add(set);
@@ -242,7 +242,7 @@ public class Diagram {
 			//subtract from each of the mixed sets all the closed sets
 			sets = mixed.iterator();
 			while(sets.hasNext()){
-				CellSet set = (CellSet) sets.next();
+				CellSet set = sets.next();
 				Iterator<CellSet> closedSets = closed.iterator();
 				while(closedSets.hasNext()){
 					CellSet closedSet = closedSets.next();
@@ -274,7 +274,7 @@ public class Diagram {
 				
 			sets = mixed.iterator();
 			while(sets.hasNext()){
-				CellSet set = (CellSet) sets.next();
+				CellSet set = sets.next();
 				boundarySetsStep2.remove(set);
 				boundarySetsStep2.addAll(set.breakTrulyMixedBoundaries(workGrid));
 			}
@@ -296,7 +296,7 @@ public class Diagram {
 		
 			sets = boundarySetsStep2.iterator();
 			while(sets.hasNext()){
-				CellSet set = (CellSet) sets.next();
+				CellSet set = sets.next();
 				int type = set.getType(workGrid);
 				if(type == CellSet.TYPE_CLOSED) closed.add(set);
 				else if(type == CellSet.TYPE_OPEN) open.add(set);
@@ -325,7 +325,7 @@ public class Diagram {
 		ArrayList<DiagramComponent> closedShapes = new ArrayList<DiagramComponent>();
 		sets = closed.iterator();
 		while(sets.hasNext()){
-			CellSet set = (CellSet) sets.next();
+			CellSet set = sets.next();
 			
 			if(DEBUG_MAKE_SHAPES) {
 				set.printAsGrid();
@@ -347,9 +347,9 @@ public class Diagram {
 		//make open shapes
 		sets = open.iterator();
 		while(sets.hasNext()){
-			CellSet set = (CellSet) sets.next();
+			CellSet set = sets.next();
 			if(set.size() == 1){ //single cell "shape"
-				TextGrid.Cell cell = (TextGrid.Cell) set.getFirst();
+				TextGrid.Cell cell = set.getFirst();
 				if(!grid.cellContainsDashedLineChar(cell)) { 
 					DiagramShape shape = DiagramShape.createSmallLine(workGrid, cell, cellWidth, cellHeight); 
 					if(shape != null) {
@@ -386,7 +386,7 @@ public class Diagram {
 		Iterator<CellColorPair> cellColorPairs = grid.findColorCodes().iterator();
 		while(cellColorPairs.hasNext()){
 			TextGrid.CellColorPair pair =
-				(TextGrid.CellColorPair) cellColorPairs.next();
+                    cellColorPairs.next();
 			
 			ShapePoint point =
 				new ShapePoint(getCellMidX(pair.cell), getCellMidY(pair.cell));
@@ -400,7 +400,7 @@ public class Diagram {
 		Iterator<CellTagPair> cellTagPairs = grid.findMarkupTags().iterator();
 		while(cellTagPairs.hasNext()){
 			TextGrid.CellTagPair pair =
-				(TextGrid.CellTagPair) cellTagPairs.next();
+                    cellTagPairs.next();
 			
 			ShapePoint point =
 				new ShapePoint(getCellMidX(pair.cell), getCellMidY(pair.cell));
@@ -530,7 +530,7 @@ public class Diagram {
 		
 		Iterator<CellSet> textGroupIt = textGroups.iterator();
 		while(textGroupIt.hasNext()){
-			CellSet textGroupCellSet = (CellSet) textGroupIt.next();
+			CellSet textGroupCellSet = textGroupIt.next();
 			
 			TextGrid isolationGrid = new TextGrid(width, height);
 			workGrid.copyCellsTo(textGroupCellSet, isolationGrid);
@@ -595,11 +595,11 @@ public class Diagram {
 		//set outline to true for test within custom shapes
 		Iterator<DiagramShape> shapes = this.getAllDiagramShapes().iterator();
 		while(shapes.hasNext()){
-			DiagramShape shape = (DiagramShape) shapes.next();
+			DiagramShape shape = shapes.next();
 			if(shape.getType() == DiagramShape.TYPE_CUSTOM){
 				Iterator<DiagramText> textObjects = getTextObjects().iterator();
 				while(textObjects.hasNext()){
-					DiagramText textObject = (DiagramText) textObjects.next();
+					DiagramText textObject = textObjects.next();
 					textObject.setHasOutline(true);
 					textObject.setColor(DiagramText.DEFAULT_COLOR);
 				}

@@ -218,23 +218,21 @@ public class DiagramShape extends DiagramComponent {
 	public boolean isPointLinesEnd(ShapePoint point){
 		if(isClosed()) return false; //no line-ends in closed shapes!
 		if(point == points.get(0)) return true;
-		if(point == points.get(points.size() - 1)) return true;
-		return false;
-	}
+        return point == points.get(points.size() - 1);
+    }
 	
 	//TODO: method in development: isRectangle()
 	public boolean isRectangle(){
 		if(points.size() != 4) return false;
-		ShapePoint p1 = (ShapePoint) points.get(0);
-		ShapePoint p2 = (ShapePoint) points.get(1);
-		ShapePoint p3 = (ShapePoint) points.get(2);
-		ShapePoint p4 = (ShapePoint) points.get(3);
-		if(p1.isInLineWith(p2) 
-			&& p2.isInLineWith(p3)
-			&& p3.isInLineWith(p4)
-			&& p4.isInLineWith(p1)) return true;
-		return false;
-	}
+		ShapePoint p1 = points.get(0);
+		ShapePoint p2 = points.get(1);
+		ShapePoint p3 = points.get(2);
+		ShapePoint p4 = points.get(3);
+        return p1.isInLineWith(p2)
+                && p2.isInLineWith(p3)
+                && p3.isInLineWith(p4)
+                && p4.isInLineWith(p1);
+    }
 	
 	/**
 	 * Crude way to determine which of the two shapes is smaller,
@@ -250,12 +248,9 @@ public class DiagramShape extends DiagramComponent {
 		
 		int area = bounds.height * bounds.width;
 		int otherArea = otherBounds.height * otherBounds.width;
-		
-		if(area < otherArea) {
-			return true;
-		}
-		return false;
-	}
+
+        return area < otherArea;
+    }
 	
 	/**
 	 * @return
@@ -312,7 +307,7 @@ public class DiagramShape extends DiagramComponent {
 	}
 
 	public ShapePoint getPoint(int i) {
-		return (ShapePoint) points.get(i);
+		return points.get(i);
 	}
 
 	public void setPoint(int i, ShapePoint point) {
@@ -380,7 +375,7 @@ public class DiagramShape extends DiagramComponent {
 
 	public GeneralPath makeMarkerPath(Diagram diagram){
 		if(points.size() != 1) return null;
-		ShapePoint center = (ShapePoint) this.getPoint(0);
+		ShapePoint center = this.getPoint(0);
 		float diameter =
 			(float) 0.7 * Math.min(diagram.getCellWidth(), diagram.getCellHeight());
 		return new GeneralPath(new Ellipse2D.Float(
@@ -502,16 +497,16 @@ public class DiagramShape extends DiagramComponent {
 		if(this.points.size() == 1) return edges;
 		int noOfPoints = points.size();
 		for(int i = 0; i < noOfPoints - 1; i++){
-			ShapePoint startPoint = (ShapePoint) points.get(i);
-			ShapePoint endPoint = (ShapePoint) points.get(i + 1);
+			ShapePoint startPoint = points.get(i);
+			ShapePoint endPoint = points.get(i + 1);
 			ShapeEdge edge = new ShapeEdge(startPoint, endPoint, this);
 			edges.add(edge);
 		}
 		//if it is closed return edge that connects the
 		//last point to the first
 		if(this.isClosed()){
-			ShapePoint firstPoint = (ShapePoint) points.get(0);
-			ShapePoint lastPoint = (ShapePoint) points.get(points.size() - 1);
+			ShapePoint firstPoint = points.get(0);
+			ShapePoint lastPoint = points.get(points.size() - 1);
 			ShapeEdge edge = new ShapeEdge(lastPoint, firstPoint, this);
 			edges.add(edge);
 		}
@@ -663,15 +658,15 @@ public class DiagramShape extends DiagramComponent {
 	public void moveEndsToCellEdges(TextGrid grid, Diagram diagram){
 		if(isClosed()) return;
 		
-		ShapePoint linesEnd = (ShapePoint) points.get(0);
-		ShapePoint nextPoint = (ShapePoint) points.get(1);
+		ShapePoint linesEnd = points.get(0);
+		ShapePoint nextPoint = points.get(1);
 
 		ShapePoint projectionPoint = getCellEdgeProjectionPointBetween(linesEnd, nextPoint, diagram);
 		
 		linesEnd.moveTo(projectionPoint);
 
-		linesEnd = (ShapePoint) points.get(points.size() - 1);
-		nextPoint = (ShapePoint) points.get(points.size() - 2);
+		linesEnd = points.get(points.size() - 1);
+		nextPoint = points.get(points.size() - 2);
 
 		projectionPoint = getCellEdgeProjectionPointBetween(linesEnd, nextPoint, diagram);
 		
@@ -684,13 +679,13 @@ public class DiagramShape extends DiagramComponent {
 		ShapePoint linesEnd;
 		ShapePoint nextPoint;
 
-		linesEnd = (ShapePoint) points.get(0);
-		nextPoint = (ShapePoint) points.get(1);
+		linesEnd = points.get(0);
+		nextPoint = points.get(1);
 		
 		connectEndToAnchors(grid, diagram, nextPoint, linesEnd);
 		
-		linesEnd = (ShapePoint) points.get(points.size() - 1);
-		nextPoint = (ShapePoint) points.get(points.size() - 2);
+		linesEnd = points.get(points.size() - 1);
+		nextPoint = points.get(points.size() - 2);
 		
 		connectEndToAnchors(grid, diagram, nextPoint, linesEnd);
 		

@@ -189,12 +189,12 @@ public class BitmapRenderer {
 						image.getHeight(),
 						image.getType());
 
-				simpleBlur.filter(image, (BufferedImage) destination);
+				simpleBlur.filter(image, destination);
 
 				//destination = destination.getSubimage(blurRadius/2, blurRadius/2, image.getWidth(), image.getHeight()); 
 				g2 = (Graphics2D) destination.getGraphics();
 				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasSetting);
-				renderedImage = (RenderedImage) destination;
+				renderedImage = destination;
 			}
 		}
 
@@ -231,7 +231,7 @@ public class BitmapRenderer {
 		ArrayList<DiagramShape> storageShapes = new ArrayList<DiagramShape>();
 		shapesIt = shapes.iterator();
 		while(shapesIt.hasNext()){
-			DiagramShape shape = (DiagramShape) shapesIt.next();
+			DiagramShape shape = shapesIt.next();
 			if(shape.getType() == DiagramShape.TYPE_STORAGE) {
 				storageShapes.add(shape);
 				continue;
@@ -250,7 +250,7 @@ public class BitmapRenderer {
 		g2.setStroke(normalStroke);
 		shapesIt = storageShapes.iterator();
 		while(shapesIt.hasNext()){
-			DiagramShape shape = (DiagramShape) shapesIt.next();
+			DiagramShape shape = shapesIt.next();
 
 			GeneralPath path;
 			path = shape.makeIntoRenderPath(diagram, options);
@@ -278,7 +278,7 @@ public class BitmapRenderer {
 		ArrayList<DiagramShape> pointMarkers = new ArrayList<DiagramShape>();
 		shapesIt = shapes.iterator();
 		while(shapesIt.hasNext()){
-			DiagramShape shape = (DiagramShape) shapesIt.next();
+			DiagramShape shape = shapesIt.next();
 			if(shape.getType() == DiagramShape.TYPE_POINT_MARKER) {
 				pointMarkers.add(shape);
 				continue;
@@ -323,7 +323,7 @@ public class BitmapRenderer {
 		g2.setStroke(normalStroke);
 		shapesIt = pointMarkers.iterator();
 		while(shapesIt.hasNext()){
-			DiagramShape shape = (DiagramShape) shapesIt.next();
+			DiagramShape shape = shapesIt.next();
 			//if(shape.getType() != DiagramShape.TYPE_POINT_MARKER) continue;
 
 			GeneralPath path;
@@ -392,10 +392,10 @@ public class BitmapRenderer {
 		}
 		
 		public void paint(Graphics g){
-			Graphics g2 = (Graphics2D) g;
+			Graphics g2 = g;
 			Iterator<DiagramText> textIt = textObjects.iterator();
 			while(textIt.hasNext()){
-				DiagramText text = (DiagramText) textIt.next();
+				DiagramText text = textIt.next();
 				g2.setFont(text.getFont());
 				if(text.hasOutline()){
 					g2.setColor(text.getOutlineColor());

@@ -100,7 +100,7 @@ public class ConversionOptions {
 			processingOptions.setTabSize(tabSizeValue);
 		}
 
-		String encoding = (String) cmdLine.getOptionValue("encoding");
+		String encoding = cmdLine.getOptionValue("encoding");
 		if(encoding != null){
 			new String(new byte[2], encoding);
 			processingOptions.setCharacterEncoding(encoding);

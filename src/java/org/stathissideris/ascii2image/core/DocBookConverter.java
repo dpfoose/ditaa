@@ -34,8 +34,7 @@ public class DocBookConverter {
     		String nsURI,
     		String strippedName,
 			String tagName,
-			Attributes attributes)
-       			throws SAXException {
+			Attributes attributes) {
      		if (tagName.equalsIgnoreCase("title"))
         	title = true;
      		if (tagName.equalsIgnoreCase("url"))

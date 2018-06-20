@@ -162,10 +162,9 @@ public class ShapeEdge {
 		ShapeEdge edge = (ShapeEdge) object;
 		if(startPoint.equals(edge.getStartPoint())
 			&& endPoint.equals(edge.getEndPoint())) return true;
-		if(startPoint.equals(edge.getEndPoint())
-			&& endPoint.equals(edge.getStartPoint())) return true;
-		return false;
-	}
+        return startPoint.equals(edge.getEndPoint())
+                && endPoint.equals(edge.getStartPoint());
+    }
 
 	public boolean touchesWith(ShapeEdge other){
 		if(this.equals(other)) return true;
@@ -207,11 +206,10 @@ public class ShapeEdge {
 		// -----------------
 		
 		if(this.startPoint.isWithinEdge(other) || this.endPoint.isWithinEdge(other)) return true;
-		if(other.startPoint.isWithinEdge(this) || other.endPoint.isWithinEdge(this)) return true;	
-		
-		
-		return false;
-	}
+        return other.startPoint.isWithinEdge(this) || other.endPoint.isWithinEdge(this);
+
+
+    }
 	
 	private void changeAxis(){
 		ShapePoint temp = new ShapePoint(startPoint);
@@ -241,14 +239,12 @@ public class ShapeEdge {
 	}
 	
 	public boolean isHorizontal(){
-		if(startPoint.y == endPoint.y) return true;
-		return false;
-	}
+        return startPoint.y == endPoint.y;
+    }
 	
 	public boolean isVertical(){
-		if(startPoint.x == endPoint.x) return true;
-		return false;
-	}
+        return startPoint.x == endPoint.x;
+    }
 
 	public String toString(){
 		return startPoint+" -> "+endPoint;

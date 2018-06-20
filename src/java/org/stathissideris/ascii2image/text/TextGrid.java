@@ -384,7 +384,7 @@ public class TextGrid {
 			Iterator it = humanColorCodes.keySet().iterator();
 			while(it.hasNext()){
 				String humanCode = (String) it.next();
-				String hexCode = (String) humanColorCodes.get(humanCode);
+				String hexCode = humanColorCodes.get(humanCode);
 				if(hexCode != null){
 					humanCode = "c" + humanCode;
 					hexCode = "c" + hexCode;
@@ -709,17 +709,15 @@ public class TextGrid {
 	private boolean isOnHorizontalLine(int x, int y){
 		char c1 = get(x - 1, y);
 		char c2 = get(x + 1, y);
-		if(isHorizontalLine(c1) && isHorizontalLine(c2)) return true;
-		return false;
-	}
+        return isHorizontalLine(c1) && isHorizontalLine(c2);
+    }
 
 	public boolean isOnVerticalLine(Cell cell){ return isOnVerticalLine(cell.x, cell.y); }
 	private boolean isOnVerticalLine(int x, int y){
 		char c1 = get(x, y - 1);
 		char c2 = get(x, y + 1);
-		if(isVerticalLine(c1) && isVerticalLine(c2)) return true;
-		return false;
-	}
+        return isVerticalLine(c1) && isVerticalLine(c2);
+    }
 
 
 	public static boolean isBoundary(char c){
@@ -731,20 +729,14 @@ public class TextGrid {
 		if(0 == c) return false;
 		if('+' == c || '\\' == c || '/' == c){
 			System.out.print("");
-			if(
-			       isIntersection(cell) 
-				|| isCorner(cell)
-				|| isStub(cell) 
-				|| isCrossOnLine(cell)){
-				return true;
-			} else return false;
+            return isIntersection(cell)
+                    || isCorner(cell)
+                    || isStub(cell)
+                    || isCrossOnLine(cell);
 		}
 		//return StringUtils.isOneOf(c, undisputableBoundaries);
-		if(StringUtils.isOneOf(c, boundaries) && !isLoneDiagonal(cell)){
-			return true;
-		}
-		return false;
-	}
+        return StringUtils.isOneOf(c, boundaries) && !isLoneDiagonal(cell);
+    }
 
 	public boolean isLine(Cell cell){
 		return isHorizontalLine(cell) || isVerticalLine(cell);
@@ -910,13 +902,11 @@ public class TextGrid {
 	
 	public boolean isBullet(Cell cell){
 		char c = get(cell);
-		if((c == 'o' || c == '*')
-			&& isBlank(cell.getEast())
-			&& isBlank(cell.getWest())
-			&& Character.isLetterOrDigit(get(cell.getEast().getEast())) )
-			return true;
-		return false;
-	}
+        return (c == 'o' || c == '*')
+                && isBlank(cell.getEast())
+                && isBlank(cell.getWest())
+                && Character.isLetterOrDigit(get(cell.getEast().getEast()));
+    }
 	
 	public void replaceBullets(){
 		int width = getWidth();
@@ -1160,18 +1150,16 @@ public class TextGrid {
 	}
 
 	public boolean isOutOfBounds(Cell cell){
-		if(cell.x > getWidth() - 1
-			|| cell.y > getHeight() - 1
-			|| cell.x < 0
-			|| cell.y < 0) return true;
-		return false;
-	}
+        return cell.x > getWidth() - 1
+                || cell.y > getHeight() - 1
+                || cell.x < 0
+                || cell.y < 0;
+    }
 
 	public boolean isOutOfBounds(int x, int y){
 		char c = get(x, y);
-		if(0 == c) return true;
-		return false;
-	}
+        return 0 == c;
+    }
 
 	public boolean isBlank(Cell cell){
 		char c = get(cell);
@@ -1332,7 +1320,7 @@ public class TextGrid {
 		stack.push(seed);
 		
 		while(!stack.isEmpty()){
-			Cell cell = (Cell) stack.pop();
+			Cell cell = stack.pop();
 			
 			//set(cell, newChar);
 			cellsFilled.add(cell);
@@ -1363,7 +1351,7 @@ public class TextGrid {
 		stack.push(seed);
 		
 		while(!stack.isEmpty()){
-			Cell cell = (Cell) stack.pop();
+			Cell cell = stack.pop();
 			
 			set(cell, newChar);
 			cellsFilled.add(cell);
@@ -1404,7 +1392,7 @@ public class TextGrid {
 		stack.push(seed);
 		
 		while(!stack.isEmpty()){
-			Cell cell = (Cell) stack.pop();
+			Cell cell = stack.pop();
 			
 			set(cell, newChar);
 
@@ -1458,7 +1446,7 @@ public class TextGrid {
 			}
 			
 			left = cell.getEast().x;
-			boolean skip = (x > segment.x1)? true : false; 
+			boolean skip = x > segment.x1;
 
 			if(left < segment.x1){ //leak on left?
 				//TODO: i think the first param should be x
@@ -1481,7 +1469,8 @@ public class TextGrid {
 			    }
 				skip = false; //skip only once
 				
-				for(++x; x <= segment.x2 && get(x, segment.y) != oldChar; ++x){;}
+				for(++x; x <= segment.x2 && get(x, segment.y) != oldChar; ++x){
+                }
 				left = x;
 			} while( x < segment.x2);
 		}
@@ -1495,7 +1484,7 @@ public class TextGrid {
 	}
 
 	public boolean loadFrom(String filename)
-			throws FileNotFoundException, IOException
+			throws IOException
 			{
 		return loadFrom(filename, null);
 	}
@@ -1540,7 +1529,7 @@ public class TextGrid {
 		rows = new ArrayList<StringBuilder>(lines.subList(0, i + 2));
 
 		if(options != null) fixTabs(options.getTabSize());
-		else fixTabs(options.DEFAULT_TAB_SIZE);
+		else fixTabs(ProcessingOptions.DEFAULT_TAB_SIZE);
 
 
 		// make all lines of equal length
@@ -1719,31 +1708,26 @@ public class TextGrid {
 
 
 		public boolean isNorthOf(Cell cell){
-			if(this.y < cell.y) return true;
-			return false;
-		}
+            return this.y < cell.y;
+        }
 
 		public boolean isSouthOf(Cell cell){
-			if(this.y > cell.y) return true;
-			return false;
-		}
+            return this.y > cell.y;
+        }
 
 		public boolean isWestOf(Cell cell){
-			if(this.x < cell.x) return true;
-			return false;
-		}
+            return this.x < cell.x;
+        }
 
 		public boolean isEastOf(Cell cell){
-			if(this.x > cell.x) return true;
-			return false;
-		}
+            return this.x > cell.x;
+        }
 
 
 		public boolean equals(Object o){
 			Cell cell = (Cell) o;
 			if(cell == null) return false;
-			if(x == cell.x && y == cell.y) return true;
-			else return false;
+            return x == cell.x && y == cell.y;
 		}
 		
 		public int hashCode() {
@@ -1753,9 +1737,8 @@ public class TextGrid {
 		public boolean isNextTo(int x2, int y2){
 			if(Math.abs(x2 - x) == 1 && Math.abs(y2 - y) == 1) return false;
 			if(Math.abs(x2 - x) == 1 && y2 == y) return true;
-			if(Math.abs(y2 - y) == 1 && x2 == x) return true;
-			return false;
-		}
+            return Math.abs(y2 - y) == 1 && x2 == x;
+        }
 		
 		public boolean isNextTo(Cell cell){
 			if(cell == null) throw new IllegalArgumentException("cell cannot be null");
