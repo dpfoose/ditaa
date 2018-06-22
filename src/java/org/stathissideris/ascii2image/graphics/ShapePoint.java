@@ -22,7 +22,7 @@ package org.stathissideris.ascii2image.graphics;
 import java.awt.geom.Point2D.Float;
 
 /**
- * 
+ * Implements methods to handle point shape and associated operations
  * @author Efstathios Sideris
  */
 public class ShapePoint extends java.awt.geom.Point2D.Float {
@@ -65,12 +65,22 @@ public class ShapePoint extends java.awt.geom.Point2D.Float {
 	public void setType(int i) {
 		type = i;
 	}
-	
+
+	/**
+     * Checks if this point is aligned horizontally or vertically with <code>point</code>
+	 * @param point
+	 * @return
+	 */
 	public boolean isInLineWith(ShapePoint point){
 		if(this.x == point.x) return true;
         return this.y == point.y;
     }
-	
+
+	/**
+     * Checks if this point is on <code>edge</code>
+	 * @param edge
+	 * @return
+	 */
 	public boolean isWithinEdge(ShapeEdge edge) {
 		if(edge.isHorizontal()) {
 			if(x >= edge.getStartPoint().x && x <= edge.getEndPoint().x) return true;

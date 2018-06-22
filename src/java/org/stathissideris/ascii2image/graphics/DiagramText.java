@@ -40,6 +40,13 @@ public class DiagramText extends DiagramComponent {
 	private boolean hasOutline = false;
 	private Color outlineColor = Color.white;
 
+	/**
+     * Initialize DiagramText with parameters
+	 * @param x
+	 * @param y
+	 * @param text
+	 * @param font
+	 */
 	public DiagramText(int x, int y, String text, Font font){
 		if(text == null) throw new IllegalArgumentException("DiagramText cannot be initialised with a null string");
 		if(font == null) throw new IllegalArgumentException("DiagramText cannot be initialised with a null font");
@@ -55,6 +62,11 @@ public class DiagramText extends DiagramComponent {
 		centerVerticallyBetween((int) bounds.getMinY(), (int) bounds.getMaxY());
 	}
 
+	/**
+     * Center-Align text horizontally
+	 * @param minX
+	 * @param maxX
+	 */
 	public void centerHorizontallyBetween(int minX, int maxX){
 		int width = FontMeasurer.instance().getWidthFor(text, font);
 		int center = Math.abs(maxX - minX) / 2;
@@ -62,12 +74,21 @@ public class DiagramText extends DiagramComponent {
 		
 	}
 
+	/**
+	 * Center-Align text vertically
+	 * @param minY
+	 * @param maxY
+	 */
 	public void centerVerticallyBetween(int minY, int maxY){
 		int zHeight = FontMeasurer.instance().getZHeight(font);
 		int center = Math.abs(maxY - minY) / 2;
 		yPos -= Math.abs(center - zHeight / 2);
 	}
 
+	/**
+     * Right-align text at <code>x</code>
+	 * @param x
+	 */
 	public void alignRightEdgeTo(int x){
 		int width = FontMeasurer.instance().getWidthFor(text, font);
 		xPos = x - width;

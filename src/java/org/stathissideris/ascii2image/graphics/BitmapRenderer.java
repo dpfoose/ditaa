@@ -49,7 +49,8 @@ import org.stathissideris.ascii2image.core.ShapeAreaComparator;
 import org.stathissideris.ascii2image.text.TextGrid;
 
 /**
- * 
+ * This class implements methods to render Bitmap image from Diagram
+ *
  * @author Efstathios Sideris
  */
 public class BitmapRenderer {
@@ -85,7 +86,14 @@ public class BitmapRenderer {
 		//Process p = Runtime.getRuntime().exec("display "+filename+".png", null, workDir);
 	}
 
-	private boolean renderToPNG(Diagram diagram, String filename, RenderingOptions options){	
+	/**
+	 * Render <code>diagram</code> to a png format image
+	 *
+	 * @param diagram
+	 * @param filename
+	 * @param options
+	 */
+	private boolean renderToPNG(Diagram diagram, String filename, RenderingOptions options){
 		RenderedImage image = renderToImage(diagram, options);
 		
 		try {
@@ -98,7 +106,14 @@ public class BitmapRenderer {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Public method to render an image from <code>diagram</code> using the configurations in <code>options</code>
+	 *
+	 * @param diagram
+	 * @param options
+	 * @return RenderedImage object
+	 */
 	public RenderedImage renderToImage(Diagram diagram, RenderingOptions options){
 		BufferedImage image;
 		if(options.needsTransparency()) {
@@ -115,7 +130,17 @@ public class BitmapRenderer {
 		
 		return render(diagram, image, options);
 	}
-	
+
+	/**
+     * The method implements rendering functionality using a <code> Diagram</code> object.
+     * The features like shadow, antialiasing are added to destination image based on <code>options</code>.
+	 * It also handles rendering of custom shapes.
+	 *
+	 * @param diagram
+	 * @param image
+	 * @param options
+	 * @return
+	 */
 	public RenderedImage render(Diagram diagram, BufferedImage image,  RenderingOptions options){
 		RenderedImage renderedImage = image;
 		Graphics2D g2 = image.createGraphics();
@@ -375,7 +400,13 @@ public class BitmapRenderer {
 		
 		return renderedImage;
 	}
-	
+
+	/**
+	 * @param textObjects
+	 * @param width
+	 * @param height
+	 * @return
+	 */
 	private RenderedImage renderTextLayer(ArrayList<DiagramText> textObjects, int width, int height){
 		TextCanvas canvas = new TextCanvas(textObjects);
 		Image image = canvas.createImage(width, height);
@@ -409,7 +440,11 @@ public class BitmapRenderer {
 			}
 		}
 	}
-	
+
+	/**
+	 * @param shape
+	 * @param g2
+	 */
 	private void renderCustomShape(DiagramShape shape, Graphics2D g2){
 		CustomShapeDefinition definition = shape.getDefinition();
 		
@@ -436,7 +471,12 @@ public class BitmapRenderer {
 			renderCustomSVGShape(shape, g2);
 		}
 	}
-	
+
+	/**
+	 * Render shape in SVG format
+	 * @param shape
+	 * @param g2
+	 */
 	private void renderCustomSVGShape(DiagramShape shape, Graphics2D g2){
 		CustomShapeDefinition definition = shape.getDefinition();
 		Rectangle bounds = shape.getBounds();
@@ -454,7 +494,12 @@ public class BitmapRenderer {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Render shape in PNG format
+	 * @param shape
+	 * @param g2
+	 */
 	private void renderCustomPNGShape(DiagramShape shape, Graphics2D g2){
 		CustomShapeDefinition definition = shape.getDefinition();
 		Rectangle bounds = shape.getBounds();

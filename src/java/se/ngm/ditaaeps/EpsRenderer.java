@@ -76,6 +76,12 @@ public class EpsRenderer {
   private static String[] markupModeAllowedValues = {"use", "ignore", "render"};
 
 
+  /**
+   * Render an EPS image from input <code>diagram</code> using <code>options</code> config parameters.
+   * @param diagram
+   * @param out
+   * @param options
+   */
   public static void renderToEps(Diagram diagram, PrintWriter out, RenderingOptions options) {
     //RenderedImage renderedImage = image;
     EpsGraphics2D g2 = new EpsGraphics2D(out, new Rectangle2D.Double(0, -diagram.getHeight(), diagram.getWidth(), diagram.getHeight()));

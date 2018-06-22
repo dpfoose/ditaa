@@ -62,7 +62,18 @@ public class OffScreenSVGRenderer {
 	public BufferedImage renderToImage(String uri, int width, int height) throws IOException {
 		return renderToImage(uri, width, height, false, null, null);
 	}
-	
+
+	/**
+     * Build SVGDocument from <code>uri</code> resource and constructs BufferedImage
+	 * @param uri
+	 * @param width
+	 * @param height
+	 * @param stretch
+	 * @param idRegex
+	 * @param replacementColor
+	 * @return
+	 * @throws IOException
+	 */
 	public BufferedImage renderToImage(String uri, int width, int height, boolean stretch, String idRegex, Color replacementColor) throws IOException {
 		SAXSVGDocumentFactory df = new SAXSVGDocumentFactory("org.apache.xerces.parsers.SAXParser");
 		SVGDocument document = df.createSVGDocument(uri);
@@ -74,7 +85,13 @@ public class OffScreenSVGRenderer {
 	public BufferedImage renderToImage(SVGDocument document, int width, int height){
 		return renderToImage(document, width, height, false);
 	}
-	
+
+	/**
+     * Set color fill to specified <code>color</code>
+	 * @param document
+	 * @param idRegex
+	 * @param color
+	 */
 	public void replaceFill(SVGDocument document, String idRegex, Color color){
 		String colorCode = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()); 
 		

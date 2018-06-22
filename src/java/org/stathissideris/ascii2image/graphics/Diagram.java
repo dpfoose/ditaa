@@ -107,8 +107,7 @@ public class Diagram {
 	 * <p>Finally, the text processing occurs: [pending]</p>
 	 * 
 	 * @param grid
-	 * @param cellWidth
-	 * @param cellHeight
+	 * @param options
 	 */
 	public Diagram(TextGrid grid, ConversionOptions options) {
 		
@@ -763,7 +762,10 @@ public class Diagram {
 		
 		return removedAny;
 	}
-	
+
+	/**
+	 * @return minimum value between height and width dimensions of a cell
+	 */
 	public float getMinimumOfCellDimension(){
 		return Math.min(getCellWidth(), getCellHeight());
 	}
@@ -890,7 +892,10 @@ public class Diagram {
 	private void addToShapes(DiagramShape shape){
 		shapes.add(shape);
 	}
-	
+
+	/**
+	 * @return Iterator on <code>shapes</code> list.
+	 */
 	public Iterator getShapesIterator(){
 		return shapes.iterator();
 	}	

@@ -7,6 +7,12 @@ import org.stathissideris.ascii2image.core.RenderingOptions;
  */
 public class SVGRenderer {
 
+    /**
+     * Construct SVG string from <code>diagram</code>
+     * @param diagram
+     * @param options
+     * @return
+     */
     public String renderToImage(Diagram diagram, RenderingOptions options) {
 
         SVGBuilder builder = new SVGBuilder(diagram, options);

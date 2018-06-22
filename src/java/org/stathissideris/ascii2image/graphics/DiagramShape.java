@@ -69,6 +69,14 @@ public class DiagramShape extends DiagramComponent {
 	public static void main(String[] args) {
 	}
 
+	/**
+     * Creates and returns an Arrowhead shape based on token value at <code>cell</code> in <code>grid</code>
+	 * @param grid
+	 * @param cell
+	 * @param cellXSize
+	 * @param cellYSize
+	 * @return Valid DiagramShape if valid cell token otherwise null
+	 */
 	public static DiagramShape createArrowhead(TextGrid grid, TextGrid.Cell cell, int cellXSize, int cellYSize) {
 		if(!grid.isArrowhead(cell)) return null;
 		if(grid.isNorthArrowhead(cell)) return createNorthArrowhead(grid, cell, cellXSize, cellYSize);
@@ -154,6 +162,14 @@ public class DiagramShape extends DiagramComponent {
 		return shape;
 	}
 
+	/**
+	 * Creates and returns a Line shape. The line is determined based on value of <code>cell</code>
+	 * @param grid
+	 * @param cell
+	 * @param cellXSize
+	 * @param cellYSize
+	 * @return returns DiagramShape if a valid token at cell otherwise null.
+	 */
 	public static DiagramShape createSmallLine(TextGrid grid, TextGrid.Cell cell, int cellXSize, int cellYSize) {
 		if (grid.isLine(cell)) {
 			DiagramShape shape = new DiagramShape();
@@ -186,14 +202,26 @@ public class DiagramShape extends DiagramComponent {
 		return null;
 	}
 
+	/**
+     * Adds <code>point</code> to the list.
+	 * @param point
+	 */
 	public void addToPoints(ShapePoint point){
 		points.add(point);
 	}
-	
+
+	/**
+     * Get list iterator for points
+	 * @return
+	 */
 	public Iterator getPointsIterator(){
 		return points.iterator();
 	}
-	
+
+	/**
+     * Rescale shape by <code>factor</code>
+	 * @param factor
+	 */
 	public void scale(float factor){
 		Iterator it = getPointsIterator();
 		while(it.hasNext()){
@@ -355,6 +383,10 @@ public class DiagramShape extends DiagramComponent {
 		return true;
 	}
 
+	/**
+     * Connect the dots and create a path from <code>points</code> in the shape
+	 * @return GeneralPath object if two or more points otherwise null.
+	 */
 	public GeneralPath makeIntoPath() {
 		int size = getPoints().size();
 		
@@ -373,6 +405,11 @@ public class DiagramShape extends DiagramComponent {
 		return path;
 	}
 
+	/**
+     * Generate markerPath from <code>diagram</code>
+	 * @param diagram
+	 * @return
+	 */
 	public GeneralPath makeMarkerPath(Diagram diagram){
 		if(points.size() != 1) return null;
 		ShapePoint center = this.getPoint(0);
@@ -389,7 +426,13 @@ public class DiagramShape extends DiagramComponent {
 		Rectangle bounds = makeIntoPath().getBounds();
 		return bounds;
 	}
-	
+
+	/**
+     * Create GeneralPath from <code>diagram</code> based in type.
+	 * @param diagram
+	 * @param options
+	 * @return
+	 */
 	public GeneralPath makeIntoRenderPath(Diagram diagram, RenderingOptions options) {
 		int size = getPoints().size();
 		
@@ -491,7 +534,11 @@ public class DiagramShape extends DiagramComponent {
 		}
 		return path;
 	}
-	
+
+	/**
+     * Returns list of ShapeEdge in the shape
+	 * @return
+	 */
 	public ArrayList getEdges(){
 		ArrayList edges = new ArrayList();
 		if(this.points.size() == 1) return edges;
@@ -616,18 +663,33 @@ public class DiagramShape extends DiagramComponent {
 		return result;
 	}
 
+	/**
+     * Check if the shape contains <code>point</code>
+	 * @param point
+	 * @return
+	 */
 	public boolean contains(ShapePoint point){
 		GeneralPath path = makeIntoPath();
 		if(path != null) return path.contains(point);
 		return false;
 	}
 
+	/**
+     * Check if the shape contains <code>rect</code>
+	 * @param rect
+	 * @return
+	 */
 	public boolean contains(Rectangle2D rect){
 		GeneralPath path = makeIntoPath();
 		if(path != null) return path.contains(rect);
 		return false;
 	}
 
+	/**
+     * Check if the shape intersects with <code>rect</code>
+	 * @param rect
+	 * @return
+	 */
 	public boolean intersects(Rectangle2D rect){
 		GeneralPath path = makeIntoPath();
 		if(path != null) return path.intersects(rect);
@@ -744,7 +806,11 @@ public class DiagramShape extends DiagramComponent {
 		return diagram.getCellFor(cellPoint);
 	}
 
-	
+
+	/**
+     * Serialize the shape
+	 * @return
+	 */
 	public String toString(){
 		String s = "DiagramShape, "+points.size()+" points: ";
 		Iterator it = getPointsIterator();

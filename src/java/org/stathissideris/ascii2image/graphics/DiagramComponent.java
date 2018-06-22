@@ -26,13 +26,23 @@ import org.stathissideris.ascii2image.text.CellSet;
 import org.stathissideris.ascii2image.text.TextGrid;
 
 /**
- * 
+ * Implements abstract class for Diagram components
  * @author Efstathios Sideris
  */
 public abstract class DiagramComponent {
 	
 	private static final boolean DEBUG = false;
-	
+
+	/**
+     * Creates and returns a ShapePoint object for given <code>cell</code> on <code>grid</code>
+	 * The type of the point is inferred from cell value.
+	 * @param cell
+	 * @param grid
+	 * @param cellWidth
+	 * @param cellHeight
+	 * @param allRound
+	 * @return
+	 */
 	protected static ShapePoint makePointForCell(TextGrid.Cell cell, TextGrid grid, int cellWidth, int cellHeight, boolean allRound){
 		if (DEBUG)
 			System.out.println("Found point at cell "+cell);
@@ -74,6 +84,14 @@ public abstract class DiagramComponent {
 		return createClosedFromBoundaryCells(grid, cells, cellWidth, cellHeight, false);
 	}
 
+	/**
+	 * @param grid
+	 * @param cells
+	 * @param cellWidth
+	 * @param cellHeight
+	 * @param allRound
+	 * @return
+	 */
 	public static DiagramComponent createClosedFromBoundaryCells(TextGrid grid, CellSet cells, int cellWidth, int cellHeight, boolean allRound){
 		if(cells.getType(grid) == CellSet.TYPE_OPEN) throw new IllegalArgumentException("CellSet is closed and cannot be handled by this method");
 		if(cells.size() < 2) return null;

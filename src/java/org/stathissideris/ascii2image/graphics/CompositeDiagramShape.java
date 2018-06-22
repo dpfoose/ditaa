@@ -28,7 +28,7 @@ import org.stathissideris.ascii2image.core.DebugUtils;
 import org.stathissideris.ascii2image.text.*;
 
 /**
- * 
+ * Provides methods to create Composite diagrams
  * @author Efstathios Sideris
  */
 public class CompositeDiagramShape extends DiagramComponent {
@@ -53,6 +53,15 @@ public class CompositeDiagramShape extends DiagramComponent {
 	}
 
 
+	/**
+     * Create a composite shape from cells. Detects edges from boundary cells.
+	 * @param grid
+	 * @param boundaryCells
+	 * @param cellWidth
+	 * @param cellHeight
+	 * @param allRound
+	 * @return
+	 */
 	public static DiagramComponent createOpenFromBoundaryCells(
 			final TextGrid grid,
 			final CellSet boundaryCells,
@@ -99,8 +108,8 @@ public class CompositeDiagramShape extends DiagramComponent {
 		
 		return compositeShape;
 	}
-	
-	
+
+
 	private static List<DiagramShape> growEdgesFromCell(
 			TextGrid workGrid,
 			final int cellWidth,
@@ -209,6 +218,11 @@ public class CompositeDiagramShape extends DiagramComponent {
 		return result;
 	}
 
+	/**
+     * Connects all edges to close the shape
+	 * @param grid
+	 * @param diagram
+	 */
 	public void connectEndsToAnchors(TextGrid grid, Diagram diagram){
 		Iterator it = shapes.iterator();
 		while (it.hasNext()) {
@@ -286,10 +300,18 @@ public class CompositeDiagramShape extends DiagramComponent {
 		return line;
 	}
 
+	/**
+     * Add shape to internal list
+	 * @param shape
+	 */
 	public void addToShapes(DiagramShape shape){
 		shapes.add(shape);
 	}
-	
+
+	/**
+     * Get shape iterator to internal list
+	 * @return
+	 */
 	private Iterator getShapesIterator(){
 		return shapes.iterator();
 	}

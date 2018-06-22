@@ -37,7 +37,13 @@ public class ShapeEdge {
 	private DiagramShape owner;
 	private ShapePoint startPoint;
 	private ShapePoint endPoint;
-	
+
+	/**
+     * Construct edge incident from/to given points
+	 * @param start
+	 * @param end
+	 * @param owner
+	 */
 	public ShapeEdge(ShapePoint start, ShapePoint end, DiagramShape owner){
 		this.startPoint = start;
 		this.endPoint = end;
@@ -61,6 +67,10 @@ public class ShapeEdge {
 		return startPoint.x; //vertical
 	}
 
+	/**
+     * Move the edge inward by <code>offset</code>
+	 * @param offset
+	 */
 	//TODO: moveInwardsBy() not implemented
 	public void moveInwardsBy(float offset){
 		int type = this.getType();
@@ -156,7 +166,12 @@ public class ShapeEdge {
 	public void setOwner(DiagramShape shape) {
 		owner = shape;
 	}
-	
+
+	/**
+     * Compare with other edge based on start and end points.
+	 * @param object
+	 * @return
+	 */
 	public boolean equals(Object object){
 		if(!(object instanceof ShapeEdge)) return false;
 		ShapeEdge edge = (ShapeEdge) object;
@@ -166,6 +181,11 @@ public class ShapeEdge {
                 && endPoint.equals(edge.getStartPoint());
     }
 
+	/**
+     * Check if two edges touch each other
+	 * @param other
+	 * @return
+	 */
 	public boolean touchesWith(ShapeEdge other){
 		if(this.equals(other)) return true;
 		

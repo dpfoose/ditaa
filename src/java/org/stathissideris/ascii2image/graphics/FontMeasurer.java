@@ -53,31 +53,61 @@ public class FontMeasurer {
 		if(DEBUG) System.out.println("Locale: "+Locale.getDefault());
 		
 		fakeRenderContext = fakeGraphics.getFontRenderContext();
-	}		 
-	
+	}
 
+
+	/**
+     * Width of the text in rendercontext
+	 * @param str
+	 * @param pixelHeight
+	 * @return
+	 */
 	public int getWidthFor(String str, int pixelHeight){
 		Font font = getFontFor(pixelHeight);
 		Rectangle2D rectangle = font.getStringBounds(str, fakeRenderContext);
 		return (int) rectangle.getWidth();
 	}
 
+	/**
+	 * Height of the text in rendercontext
+	 * @param str
+	 * @param pixelHeight
+	 * @return
+	 */
 	public int getHeightFor(String str, int pixelHeight){
 		Font font = getFontFor(pixelHeight);
 		Rectangle2D rectangle = font.getStringBounds(str, fakeRenderContext);
 		return (int) rectangle.getHeight();
 	}
 
+	/**
+	 * Width of the text for specific <code>font</code> in rendercontext
+	 * @param str
+	 * @param font
+	 * @return
+	 */
 	public int getWidthFor(String str, Font font){
 		Rectangle2D rectangle = font.getStringBounds(str, fakeRenderContext);
 		return (int) rectangle.getWidth();
 	}
 
+	/**
+	 * Height of the text for specific <code>font</code> in rendercontext
+	 * @param str
+	 * @param font
+	 * @return
+	 */
 	public int getHeightFor(String str, Font font){
 		Rectangle2D rectangle = font.getStringBounds(str, fakeRenderContext);
 		return (int) rectangle.getHeight();
 	}
-	
+
+	/**
+     * Rectangle bounds for text with given font in rendercontext
+	 * @param str
+	 * @param font
+	 * @return
+	 */
 	public Rectangle2D getBoundsFor(String str, Font font){
 		return font.getStringBounds(str, fakeRenderContext);
 	}
@@ -137,7 +167,12 @@ public class FontMeasurer {
 	}
 
 
-
+	/**
+     * Font for given context
+	 * @param pixelHeight
+	 * @param frc
+	 * @return
+	 */
 	public Font getFontFor(int pixelHeight, FontRenderContext frc){
 		float size = 12;
 		Font currentFont = new Font(fontFamilyName, Font.BOLD, (int) size);

@@ -61,17 +61,31 @@ public class ImageHandler {
 		new OffScreenSVGRenderer();
 	
 	private static ImageHandler instance = new ImageHandler();
-	
+
+	/**
+	 * @return static instance of the class for rendering
+	 */
 	public static ImageHandler instance(){
 		return instance;
 	}
 	
 	private static final MediaTracker tracker = new MediaTracker(new JLabel());
-	
+
+	/**
+     * BufferedImage from File object
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
 	public BufferedImage loadBufferedImage(File file) throws IOException {
 		return ImageIO.read(file);
 	}
-	
+
+	/**
+     * Construct Image from filename. The <code>filename</code> can be URL or file resource
+	 * @param filename
+	 * @return
+	 */
 	public Image loadImage(String filename){
 		URL url = ClassLoader.getSystemResource(filename);
 		Image result = null;
@@ -93,13 +107,33 @@ public class ImageHandler {
 		
 		return result;
 	}
-	
+
+	/**
+     * Render SVG image for a shape with no color fill
+	 * @param filename
+	 * @param width
+	 * @param height
+	 * @param stretch
+	 * @return
+	 * @throws IOException
+	 */
 	public BufferedImage renderSVG(String filename, int width, int height, boolean stretch) throws IOException {
 		File file = new File(filename);
 		URI uri = file.toURI();
 		return svgRenderer.renderToImage(uri.toString(), width, height, stretch, null, null);
 	}
 
+	/**
+	 * Render SVG image for a shape with color fill
+	 * @param filename
+	 * @param width
+	 * @param height
+	 * @param stretch
+	 * @param idRegex
+	 * @param color
+	 * @return
+	 * @throws IOException
+	 */
 	public BufferedImage renderSVG(String filename, int width, int height, boolean stretch, String idRegex, Color color) throws IOException {
 		File file = new File(filename);
 		URI uri = file.toURI();
