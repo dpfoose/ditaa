@@ -25,13 +25,17 @@ import org.stathissideris.ascii2image.graphics.DiagramShape;
 
 /**
  * 
- * @author Efstathios Sideris
+ * @author Usha Lokala
+ */
+
+/**
+ * This is class Shape3DOrderingComparator  which implements DiagramShape
  */
 public class Shape3DOrderingComparator implements Comparator<DiagramShape> {
 
 	/**
 	 * Puts diagram shapes in pseudo-3d order starting from back to front
-	 * 
+	 * @return int
 	 */
 	public int compare(DiagramShape shape1, DiagramShape shape2) {		
 		double y1 = shape1.makeIntoPath().getBounds().getCenterY();

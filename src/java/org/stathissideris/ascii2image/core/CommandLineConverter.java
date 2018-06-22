@@ -38,16 +38,17 @@ import org.stathissideris.ascii2image.text.TextGrid;
 import se.ngm.ditaaeps.EpsRenderer;
 
 /**
- *
- * @author Efstathios Sideris
+ * Author: Usha Lokala
+ * This is commandline converter using String notice and String methods
  */
-public class CommandLineConverter {
 
+
+public class CommandLineConverter {
+	s
 	private static String notice = "ditaa version 0.11, Copyright (C) 2004--2017  Efstathios (Stathis) Sideris";
 
 	private static String[] markupModeAllowedValues = {"use", "ignore", "render"};
 
-	public static void main(String[] args){
 
 		long startTime = System.currentTimeMillis();
 
@@ -319,6 +320,10 @@ public class CommandLineConverter {
 		}
 	}
 
+	/**
+	 * This is printRunInfo using commandLINE AND cmdLine
+	 * @param cmdLine
+	 */
 	private static void printRunInfo(CommandLine cmdLine) {
 		System.out.println("\n"+notice+"\n");
 
