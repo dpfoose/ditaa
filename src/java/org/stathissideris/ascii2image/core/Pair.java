@@ -19,20 +19,10 @@
  */
 package org.stathissideris.ascii2image.core;
 
-/**
- * This is generic class Pair of T,K of type public
- * @param <T>
- * @param <K>
- */
 public class Pair<T,K> {
 	public T first;
 	public K second;
-
-	/**
-	 * This is parametrized constructor of generic class pair
- 	 * @param first
-	 * @param second
-	 */
+	
 	public Pair(T first, K second) {
 		this.first = first;
 		this.second = second;

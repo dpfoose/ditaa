@@ -24,12 +24,8 @@ import java.util.HashMap;
 import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 
 /**
- * @author Usha Lokala
+ * @author Efstathios Sideris
  *
- */
-
-/**
- * This is class ProcessingOptions
  */
 public class ProcessingOptions {
 
@@ -64,91 +60,91 @@ public class ProcessingOptions {
 	
 	private String characterEncoding = null;
 	
-	/** This is areAllCornersRound method
-	 * @return allCornersAreRound;
+	/**
+	 * @return
 	 */
 	public boolean areAllCornersRound() {
 		return allCornersAreRound;
 	}
 
-	/** This is getColorCodesProcessingMode(
-	 * @return colorCodesProcessingMode;
+	/**
+	 * @return
 	 */
 	public int getColorCodesProcessingMode() {
 		return colorCodesProcessingMode;
 	}
 
-	/** This is getExportFormat
-	 * @return exportFormat;
+	/**
+	 * @return
 	 */
 	public int getExportFormat() {
 		return exportFormat;
 	}
 
-	/** This is performSeparationOfCommonEdges
-	 * @return performSeparationOfCommonEdges;
+	/**
+	 * @return
 	 */
 	public boolean performSeparationOfCommonEdges() {
 		return performSeparationOfCommonEdges;
 	}
 
-    /** This is getTagProcessingMode method
-	 * @return tagProcessingMode;
+    /**
+	 * @return
 	 */
 	public int getTagProcessingMode() {
 		return tagProcessingMode;
 	}
 
-	/** This is setAllCornersAreRound(
+	/**
 	 * @param b
 	 */
 	public void setAllCornersAreRound(boolean b) {
 		allCornersAreRound = b;
 	}
 
-	/** This is setColorCodesProcessingMode(
+	/**
 	 * @param i
 	 */
 	public void setColorCodesProcessingMode(int i) {
 		colorCodesProcessingMode = i;
 	}
 
-	/**This is setExportFormat(
+	/**
 	 * @param i
 	 */
 	public void setExportFormat(int i) {
 		exportFormat = i;
 	}
 
-	/**This is setPerformSeparationOfCommonEdges(
+	/**
 	 * @param b
 	 */
 	public void setPerformSeparationOfCommonEdges(boolean b) {
 		performSeparationOfCommonEdges = b;
 	}
 
-    /**This is setTagProcessingMode
+    /**
 	 * @param i
 	 */
 	public void setTagProcessingMode(int i) {
 		tagProcessingMode = i;
 	}
 
-	/**This is getInputFilename
-	 * @return inputFilename;
+	/**
+	 * @return
 	 */
 	public String getInputFilename() {
 		return inputFilename;
 	}
 
-	/**This is getOutputFilename method
-	 * @return outputFilename;
+	/**
+	 * @return
 	 */
 	public String getOutputFilename() {
 		return outputFilename;
 	}
 
-	/**This is setInputFilename(
+	/**
 	 * @param string
 	 */
 	public void setInputFilename(String string) {
@@ -156,7 +152,6 @@ public class ProcessingOptions {
 	}
 
 	/**
-	 * This is setOutputFilename method
 	 * @param string
 	 */
 	public void setOutputFilename(String string) {
@@ -164,23 +159,20 @@ public class ProcessingOptions {
 	}
 
 	/**
-	 * This is verbose method and returns boolean
-	 * @return beVerbose;
+	 * @return
 	 */
 	public boolean verbose() {
 		return beVerbose;
 	}
 
 	/**
-	 * This is printDebugOutput and returns type boolean
-	 * @return printDebugOutput;
+	 * @return
 	 */
 	public boolean printDebugOutput() {
 		return printDebugOutput;
 	}
 
 	/**
-	 * This is setVerbose method
 	 * @param b
 	 */
 	public void setVerbose(boolean b) {
@@ -188,7 +180,6 @@ public class ProcessingOptions {
 	}
 
 	/**
-	 * This is setPrintDebugOutput method
 	 * @param b
 	 */
 	public void setPrintDebugOutput(boolean b) {
@@ -196,15 +187,13 @@ public class ProcessingOptions {
 	}
 
 	/**
-	 * This is overwriteFiles method
-	 * @return overwriteFiles;
+	 * @return
 	 */
 	public boolean overwriteFiles() {
 		return overwriteFiles;
 	}
 
 	/**
-	 * This is setOverwriteFiles method
 	 * @param b
 	 */
 	public void setOverwriteFiles(boolean b) {
@@ -212,66 +201,39 @@ public class ProcessingOptions {
 	}
 
 	/**
-	 * This is getTabSize method
-	 * @return  tabSize;
+	 * @return
 	 */
 	public int getTabSize() {
 		return tabSize;
 	}
 
 	/**
-	 * This is setTabSize method
 	 * @param i
 	 */
 	public void setTabSize(int i) {
 		tabSize = i;
 	}
 
-	/**
-	 * This is getCharacterEncoding method
-	 * @return  characterEncoding;
-	 */
 	public String getCharacterEncoding() {
 		return characterEncoding;
 	}
 
-	/**
-	 * This is setCharacterEncoding method
-	 * @param characterEncoding
-	 */
 	public void setCharacterEncoding(String characterEncoding) {
 		this.characterEncoding = characterEncoding;
 	}
 
-	/**
-	 * This is HashMap method
-	 * @return hashmap customShapes;
-	 */
 	public HashMap<String, CustomShapeDefinition> getCustomShapes() {
 		return customShapes;
 	}
 
-	/**
-	 * This is setCustomShapes method
-	 * @param customShapes
-	 */
 	public void setCustomShapes(HashMap<String, CustomShapeDefinition> customShapes) {
 		this.customShapes = customShapes;
 	}
 
-	/**
-	 * This is putAllInCustomShapes
-	 * @param customShapes
-	 */
 	public void putAllInCustomShapes(HashMap<String, CustomShapeDefinition> customShapes) {
 		this.customShapes.putAll(customShapes);
 	}
-
-	/**
-	 * This is getFromCustomShapes
-	 * @param tagName
-	 * @return type CustomShapeDefinition
-	 */
+	
 	public CustomShapeDefinition getFromCustomShapes(String tagName){
 		return customShapes.get(tagName);
 	}

@@ -32,11 +32,8 @@ import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-/**
- * Author: Usha Lokala
- *
- *
- */
+
+public class ConfigurationParser {
 
     private static final boolean DEBUG = false;
 
@@ -48,25 +45,15 @@ import org.xml.sax.helpers.DefaultHandler;
     private File configFile;
 
     private HashMap<String, CustomShapeDefinition> shapeDefinitions = new HashMap<String, CustomShapeDefinition>();
-/**
- * This method returns shapeDefinitions values
- * This gets Shapedefinitions
- */
+
     public Collection<CustomShapeDefinition> getShapeDefinitions() {
         return shapeDefinitions.values();
     }
-/**
- * This HashMap method returns shapeDefinitions
- * @param String
- */
+
     public HashMap<String, CustomShapeDefinition> getShapeDefinitionsHash() {
         return shapeDefinitions;
     }
-/**
- * This parseFile throws ParserConfigurationException
- * returns no value
- * @param file
- */
+
     public void parseFile(File file) throws ParserConfigurationException,
             SAXException, IOException {
         configFile = file;
@@ -207,13 +194,6 @@ import org.xml.sax.helpers.DefaultHandler;
                 + " cannot be interpreted as a boolean");
     }
 
-        /**
-         * This is a class main methods
-         * @param argv
-         * @throws ParserConfigurationException
-         * @throws SAXException
-         * @throws IOException
-         */
     public static void main(String argv[]) throws ParserConfigurationException,
             SAXException, IOException {
         ConfigurationParser parser = new ConfigurationParser();

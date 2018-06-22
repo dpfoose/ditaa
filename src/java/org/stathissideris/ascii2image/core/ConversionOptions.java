@@ -33,41 +33,25 @@ import java.util.HashMap;
 
 /**
  * 
- * @author Usha Lokala
- * This is ConversionOptions class, creates two constructors
- *
+ * @author Efstathios Sideris
  */
-
-
 public class ConversionOptions {
-
+	
 	public ProcessingOptions processingOptions =
 		new ProcessingOptions();
 	public RenderingOptions renderingOptions =
 		new RenderingOptions();
-
-	/**
-	 * This is setDebug methods and paramater value is type boolean
- 	 * @param value
-	 */
+		
 	public void setDebug(boolean value){
 		processingOptions.setPrintDebugOutput(value);
 		renderingOptions.setRenderDebugLines(value);
 	}
-
-	/**
-	 * This is empty constructor
-	 */
+	
 	public ConversionOptions(){}
 
     /** Parse a color from a 6- or 8-digit hex string.  For example, FF0000 is red.
      *  If eight digits, last two digits are alpha. */
-	/**
-	 * This parseColor method parse a color from a 6- or 8-digit hex string.
-	 * @param hexString
-	 * @return object of type color
-	 */
-	public static Color parseColor(String hexString) {
+    public static Color parseColor(String hexString) {
         if(hexString.length() == 6) {
             return new Color(Integer.parseInt(hexString, 16));
         } else if(hexString.length() == 8) {
@@ -81,12 +65,7 @@ public class ConversionOptions {
             throw new IllegalArgumentException("Cannot interpret \""+hexString+"\" as background colour. It needs to be a 6- or 8-digit hex number, depending on whether you have transparency or not (same as HTML).");
         }
     }
-
-	/**
-	 * This is ConversionOptions method
-	 * @param cmdLine
-	 * @throws UnsupportedEncodingException
-	 */
+	
 	public ConversionOptions(CommandLine cmdLine) throws UnsupportedEncodingException{
 		
 		processingOptions.setVerbose(cmdLine.hasOption("verbose"));

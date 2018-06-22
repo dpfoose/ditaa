@@ -29,35 +29,16 @@ import java.io.LineNumberReader;
 
 /**
  * 
- * @author Usha Lokala
- */
-
-/**
- * This class is FileUtils and has file utilities methods
+ * @author Efstathios Sideris
  */
 public class FileUtils {
 	
 	//private static final 
-
-	/**
-	 * This is makeTargetPathname and it is static method
-	 * @param sourcePathname
-	 * @param extension
-	 * @param overwrite
-	 * @return
-	 */
+	
 	public static String makeTargetPathname(String sourcePathname, String extension, boolean overwrite){
 		return makeTargetPathname(sourcePathname, extension, "", overwrite);
 	}
-
-	/**
-	 * This is static makeTargetPathname method
-	 * @param sourcePathname
-	 * @param extension
-	 * @param postfix
-	 * @param overwrite
-	 * @return
-	 */
+	
 	public static String makeTargetPathname(String sourcePathname, String extension, String postfix, boolean overwrite){
 		File sourceFile =
 			new File(sourcePathname);
@@ -74,12 +55,7 @@ public class FileUtils {
 			targetName = makeAlternativePathname(targetName);
 		return targetName;
 	}
-
-	/**
-	 * This is static makeAlternativePathname( method
-	 * @param pathName
-	 * @return
-	 */
+	
 	public static String makeAlternativePathname(String pathName){
 		int limit = 100;
 		
@@ -92,43 +68,20 @@ public class FileUtils {
 		return null;
 	}
 
-	/**
-	 * This is staatic method getExtension(
-	 * @param pathName
-	 * @return
-	 */
 	public static String getExtension(String pathName){
 		if(pathName.lastIndexOf('.') == -1) return null;
 		return pathName.substring(pathName.lastIndexOf('.') + 1);
 	}
-
-	/**
-	 * This is getBaseName static method
-	 * @param pathName
-	 * @return
-	 */
+	
 	public static String getBaseName(String pathName){
 		if(pathName.lastIndexOf('.') == -1) return pathName;
 		return pathName.substring(0, pathName.lastIndexOf('.'));
 	}
-
-	/**
-	 * This is readFile method
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
+	
 	public static String readFile(File file) throws IOException {
 		return readFile(file, null);
 	}
-
-	/**
-	 * This is readFile method
-	 * @param file
-	 * @param encoding
-	 * @return
-	 * @throws IOException
-	 */
+	
 	public static String readFile(File file, String encoding) throws IOException {
         long length = file.length();
         
@@ -140,27 +93,10 @@ public class FileUtils {
 		return readFile(new FileInputStream(file), file.getName(), encoding, length);
 	}
 
-	/**
-	 * This is readFile method
-	 * @param is
-	 * @param name
-	 * @param encoding
-	 * @return
-	 * @throws IOException
-	 */
 	public static String readFile(InputStream is, String name, String encoding) throws IOException {
 		return readFile(is, name, encoding, -1);
 	}
 
-	/**
-	 * This is readFile method
-	 * @param is
-	 * @param name
-	 * @param encoding
-	 * @param length
-	 * @return
-	 * @throws IOException
-	 */
 	public static String readFile(InputStream is, String name, String encoding, long length) throws IOException {
 
 		if (length < 0) {
@@ -200,11 +136,7 @@ public class FileUtils {
 			}
 		}
 	}
-
-	/**
-	 * This is main method
-	 * @param args
-	 */
+		
 	public static void main(String[] args){
 		System.out.println(makeTargetPathname("C:\\Files\\papar.txt", "jpg", false));
 		System.out.println(makeTargetPathname("C:\\Files\\papar", "jpg", false));

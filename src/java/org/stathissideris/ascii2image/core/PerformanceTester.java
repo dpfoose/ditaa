@@ -27,17 +27,10 @@ import org.stathissideris.ascii2image.text.TextGrid;
 
 /**
  * 
- * @author Usha Lokala
- */
-
-/**
- * This is PerformanceTester class
+ * @author Efstathios Sideris
  */
 public class PerformanceTester {
-	/**
-	 * This is main method
-	 * @param args
-	 */
+
 	public static void main(String[] args){
 		
 		String inputFilename = "tests/text/ditaa_bug.txt";

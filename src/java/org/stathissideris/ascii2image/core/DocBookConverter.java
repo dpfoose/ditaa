@@ -19,27 +19,17 @@
  */
 package org.stathissideris.ascii2image.core;
 
-// using SAX
+import java.io.*;
+import org.xml.sax.*;
+import org.xml.sax.helpers.*;
 
-/**
- * This class is DocBookConverter
- * It extends class DefaultHandler
- * contains public methods startElement, characters,list method and main method
- */
+// using SAX
 public class DocBookConverter {
 
 	class HowToHandler extends DefaultHandler {
     	boolean title = false;
     	boolean url   = false;
 
-		/**
-		 * This method is startElement
-		 * @param nsURI
-		 * @param strippedName
-		 * @param tagName
-		 * @param attributes
-		 * @returns void
-		 */
     	public void startElement(
     		String nsURI,
     		String strippedName,
@@ -51,13 +41,6 @@ public class DocBookConverter {
         		url = true;
     		}
 
-		/**
-		 * This method is characters
-		 * @param ch
-		 * @param start
-		 * @param length
-		 * @returns void
-		 */
     	public void characters(char[] ch, int start, int length) {
      		if (title) {
        			System.out.println("Title: " + new String(ch, start, length));
@@ -69,10 +52,6 @@ public class DocBookConverter {
 		}
     }
 
-	/**
-	 * This method is list and throws exception
-	 * @throws Exception
-	 */
     public void list( ) throws Exception {
 		XMLReader parser =
 			XMLReaderFactory.createXMLReader
@@ -81,11 +60,6 @@ public class DocBookConverter {
 		parser.parse("howto.xml");
 	}
 
-	/**
-	 * This is main method
-	 * @param args
-	 * @throws Exception
-	 */
 	public static void main(String[] args) throws Exception {
 		new DocBookConverter().list( );
 	}

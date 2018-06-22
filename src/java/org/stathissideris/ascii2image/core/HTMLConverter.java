@@ -41,21 +41,14 @@ import org.stathissideris.ascii2image.text.TextGrid;
  * 
  * TODO: incomplete class
  * 
- * @author Usha Lokala
- */
-
-/**
- * This class name is HTMLConverter and extends class HTMLEditorKit
+ * @author Efstathios Sideris
  */
 public class HTMLConverter extends HTMLEditorKit {
 
 	private static final String TAG_CLASS = "textdiagram";
 	private static final String testDir = "tests/html-converter/";
-
-	/**
-	 * This is main method
-	 * @param args
-	 */
+	
+	
 	public static void main(String[] args){		
 		new HTMLConverter().convertHTMLFile(
 			testDir + "index.html", 
@@ -66,13 +59,13 @@ public class HTMLConverter extends HTMLEditorKit {
 	}
 
 	/**
-	 * This is convertHTMLFile and returns boolean value
+	 * 
 	 * @param filename
 	 * @param targetFilename
 	 * @param imageBaseFilename
 	 * @param imageDirName relative to the location of the target HTML document
 	 * @param options
-	 * @return boolean
+	 * @return
 	 */
 	public boolean convertHTMLFile(
 			String filename,
