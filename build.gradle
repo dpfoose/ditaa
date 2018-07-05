@@ -38,17 +38,16 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-task fatJar(type: Jar){
+task skinnyJar(type: Jar){
     manifest {
         attributes 'Main-Class': 'org.stathissideris.ascii2image.core.CommandLineConverter'
     }
-    baseName = project.name + '-all'
-    from {configurations.compile.collect {it.isDirectory() ? it: zipTree(it)}}
-    with jar
 }
 
 jar {
     manifest {
         attributes 'Main-Class': 'org.stathissideris.ascii2image.core.CommandLineConverter'
     }
+    baseName = project.name + '-all'
+    from {configurations.compile.collect {it.isDirectory() ? it: zipTree(it)}}
 }
