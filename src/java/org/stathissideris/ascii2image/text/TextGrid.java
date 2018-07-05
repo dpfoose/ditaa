@@ -31,7 +31,7 @@ import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 
 
 /**
- * 
+ * This class models the ASCII art diagram and is used to instantiate a Diagram.
  * @author Efstathios Sideris
  */
 public class TextGrid {
@@ -103,11 +103,18 @@ public class TextGrid {
 		//grid.printDebug();
 	}
 
-
+	/**
+	 * This is the base constructor which loads the string into rows
+	 */
 	public TextGrid(){
 		rows = new ArrayList<StringBuilder>();
 	}
-	
+
+    /**
+     * This constructor creates a TextGrid with a specified width and height
+     * @param width Width of grid in characters
+     * @param height Height of grid in characters
+     */
 	public TextGrid(int width, int height){
 		String space = StringUtils.repeatString(" ", width);
 		rows = new ArrayList<StringBuilder>();
@@ -115,11 +122,19 @@ public class TextGrid {
 			rows.add(new StringBuilder(space));
 	}
 
+    /**
+     * This method creates a TextGrid with the same dimensions as this one
+     * @param grid The other grid
+     * @return A new grid
+     */
 	public static TextGrid makeSameSizeAs(TextGrid grid){
 		return new TextGrid(grid.getWidth(), grid.getHeight());
 	}
 
-
+    /**
+     * This is the copy constructor
+     * @param otherGrid
+     */
 	public TextGrid(TextGrid otherGrid){
 		rows = new ArrayList<StringBuilder>();
 		for(StringBuilder row : otherGrid.getRows()) {
@@ -127,6 +142,9 @@ public class TextGrid {
 		}		
 	}
 
+    /**
+     * Replace this grid with a blank grid
+     */
 	public void clear(){
 		String blank = StringUtils.repeatString(" ", getWidth());
 		int height = getHeight();
@@ -194,10 +212,21 @@ public class TextGrid {
 	public char getEastOf(Cell cell){ return getEastOf(cell.x, cell.y); }
 	public char getWestOf(Cell cell){ return getWestOf(cell.x, cell.y); }
 
+    /**
+     * Write a string to a position
+     * @param x horizontal position for start of cursor
+     * @param y vertical position for start of cursor
+     * @param str string to write at cursor
+     */
 	public void writeStringTo(int x, int y, String str){
 		writeStringTo(new Cell(x, y), str);
 	}
 
+    /**
+     * Write a string to a particual cell
+     * @param cell
+     * @param str
+     */
 	public void writeStringTo(Cell cell, String str){
 		if(isOutOfBounds(cell)) return;
 		rows.get(cell.y).replace(cell.x, cell.x + str.length(), str);
@@ -212,7 +241,12 @@ public class TextGrid {
 		StringBuilder row = rows.get(y);
 		row.setCharAt(x, c);
 	}
-	
+
+    /**
+     * Set the value for a row.
+     * @param y
+     * @param row
+     */
 	public void setRow(int y, String row){
 		if(y > getHeight() || row.length() != getWidth())
 			throw new IllegalArgumentException("setRow out of bounds or string wrong size");
@@ -323,6 +357,9 @@ public class TextGrid {
 		}		
 	}
 
+    /**
+     * Swap the point markers on a line
+     */
 	public void replacePointMarkersOnLine(){
 		int width = getWidth();
 		int height = getHeight();

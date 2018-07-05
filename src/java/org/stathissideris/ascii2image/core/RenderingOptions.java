@@ -26,7 +26,11 @@ import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 
 /**
  * 
- * @author Efstathios Sideris
+ * @author Usha Lokala
+ */
+
+/**
+ * This is class RenderingOptions
  */
 public class RenderingOptions {
 
@@ -48,66 +52,141 @@ public class RenderingOptions {
 
     private ImageType imageType = ImageType.PNG;
 
+	/**
+	 * THIS IS getImageType METHOD
+	 * @return imageType enum
+	 */
 	public ImageType getImageType() { return imageType; }
+
+	/**
+	 * This is setImageType method
+	 * @param type
+	 */
 	public void setImageType(ImageType type) { imageType = type; }
 
 	private String fontFamily = "Courier";
 	private String fontURL = null;
 
+	/**
+	 *
+	 * @return fontFamily of type String
+	 */
 	public String getFontFamily() { return fontFamily; }
+
+	/**
+	 *
+	 * @return fontURL of type String
+	 */
 	public String getFontURL() { return fontURL; }
+
+	/**
+	 *
+	 * @param url
+	 */
 	public void setFontURL(String url) { fontFamily = "Custom"; fontURL = url; }
 
+	/**
+	 *
+	 * @return cellHeight of type int
+	 */
 	public int getCellHeight() {
 		return cellHeight;
 	}
 
+	/**
+	 *
+	 * @return cellWidth of type int
+	 */
 	public int getCellWidth() {
 		return cellWidth;
 	}
 
+	/**
+	 *
+	 * @return dropShadows of type boolean;
+	 */
 	public boolean dropShadows() {
 		return dropShadows;
 	}
 
+	/**
+	 *
+	 * @return renderDebugLines of type boolean;
+	 */
 	public boolean renderDebugLines() {
 		return renderDebugLines;
 	}
 
+	/**
+	 *
+	 * @return scale of type float
+	 */
 	public float getScale() {
 		return scale;
 	}
 
+	/**
+	 *
+	 * @param b
+	 */
 	public void setDropShadows(boolean b) {
 		dropShadows = b;
 	}
 
+	/**
+	 *
+	 * @param b
+	 */
 	public void setRenderDebugLines(boolean b) {
 		renderDebugLines = b;
 	}
 
+	/**
+	 *
+	 * @param f
+	 */
 	public void setScale(float f) {
 		scale = f;
 		cellWidth *= scale;
 		cellHeight *= scale;
 	}
 
+	/**
+	 *
+	 * @return antialias;
+	 */
 	public boolean performAntialias() {
 		return antialias;
 	}
 
+	/**
+	 *
+	 * @param b
+	 */
 	public void setAntialias(boolean b) {
 		antialias = b;
 	}
 
+	/**
+	 *
+	 * @return backgroundColor;
+	 */
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
 
+	/**
+	 *
+	 * @param backgroundColor
+	 */
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 	}
-	
+
+	/**
+	 *
+	 * @return boolean
+	 */
 	public boolean needsTransparency() {
 		return backgroundColor.getAlpha() < 255;
 	}

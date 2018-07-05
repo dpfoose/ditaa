@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * 
+ * A grid containing letters
  * @author Efstathios Sideris
  */
 public class AbstractionGrid {

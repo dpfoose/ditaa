@@ -19,8 +19,16 @@
  */
 package org.stathissideris.ascii2image.core;
 
+/**
+ * This is DebugUtils class and has method getLineNumber of type int
+ * This is to define Stacktrace
+ */
 public class DebugUtils {
-	public static int getLineNumber() {
+    /**
+     * This is getLineNumber method
+     * @return type int
+     */
+    public static int getLineNumber() {
 		return Thread.currentThread().getStackTrace()[2].getLineNumber();
 	}
 }

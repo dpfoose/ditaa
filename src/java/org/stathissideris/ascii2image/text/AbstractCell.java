@@ -22,6 +22,9 @@ package org.stathissideris.ascii2image.text;
 /**
  * 
  * @author Efstathios Sideris
+ * This class represents a cell on a grid.
+ * This class is misnamed, because it has no abstract methods and nothing inherits it.
+ * The static methods of this class are factories for this type.
  */
 public class AbstractCell {
 
@@ -32,6 +35,10 @@ public class AbstractCell {
 				rows[x][y] = 0;
 	}
 
+    /**
+     * Draw a horizontal line
+     * @return An AbstractCell containing a horizontal line
+     */
 	static AbstractCell makeHorizontalLine(){
 		AbstractCell result = new AbstractCell();
 		result.rows[0][1] = 1;
@@ -40,6 +47,10 @@ public class AbstractCell {
 		return result;
 	}
 
+    /**
+     * Draw a vertical line
+     * @return An AbstractCell containing a vertical line
+     */
 	static AbstractCell makeVerticalLine(){
 		AbstractCell result = new AbstractCell();
 		result.rows[1][0] = 1;
@@ -48,6 +59,10 @@ public class AbstractCell {
 		return result;
 	}
 
+    /**
+     * Draw a corner
+     * @return An AbstractCell containing a cornder
+     */
 	static AbstractCell makeCorner1(){
 		AbstractCell result = new AbstractCell();
 		result.rows[1][1] = 1;
@@ -56,6 +71,10 @@ public class AbstractCell {
 		return result;
 	}
 
+    /**
+     * Draw the second kind of corner.
+     * @return AbstractCell containing second kind of corner
+     */
 	static AbstractCell makeCorner2(){
 		AbstractCell result = new AbstractCell();
 		result.rows[0][1] = 1;
@@ -64,6 +83,10 @@ public class AbstractCell {
 		return result;
 	}
 
+    /**
+     * Draw the third kind of corner.
+     * @return AbstractCell containing third kind of corner
+     */
 	static AbstractCell makeCorner3(){
 		AbstractCell result = new AbstractCell();
 		result.rows[0][1] = 1;
@@ -72,6 +95,10 @@ public class AbstractCell {
 		return result;
 	}
 
+    /**
+     * Draw the fourth kind of corner
+     * @return AbstractCell containing fourth kind of corner
+     */
 	static AbstractCell makeCorner4(){
 		AbstractCell result = new AbstractCell();
 		result.rows[2][1] = 1;
@@ -80,30 +107,50 @@ public class AbstractCell {
 		return result;
 	}
 
+    /**
+     * Make a T-shape
+     * @return AbstractCell containing a T shape
+     */
 	static AbstractCell makeT(){
 		AbstractCell result = AbstractCell.makeHorizontalLine();
 		result.rows[1][2] = 1;
 		return result;
 	}
 
+    /**
+     * Make an upside-down-T shape
+     * @return AbstractCell containing an upside-down T shape
+     */
 	static AbstractCell makeInverseT(){
 		AbstractCell result = AbstractCell.makeHorizontalLine();
 		result.rows[1][0] = 1;
 		return result;
 	}
 
+    /**
+     * Make a K shape
+     * @return AbstractCell containing K shape.
+     */
 	static AbstractCell makeK(){
 		AbstractCell result = AbstractCell.makeVerticalLine();
 		result.rows[2][1] = 1;
 		return result;
 	}
 
+    /**
+     * Make a backwards K shape
+     * @return A Cell containing a backwards K
+     */
 	static AbstractCell makeInverseK(){
 		AbstractCell result = AbstractCell.makeVerticalLine();
 		result.rows[0][1] = 1;
 		return result;
 	}
 
+    /**
+     * Make a cross shape
+     * @return AbstractCell containing a cross shape
+     */
 	static AbstractCell makeCross(){
 		AbstractCell result = AbstractCell.makeVerticalLine();
 		result.rows[0][1] = 1;
