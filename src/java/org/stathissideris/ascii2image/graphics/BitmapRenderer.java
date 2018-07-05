@@ -34,8 +34,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -53,7 +52,7 @@ import org.stathissideris.ascii2image.text.TextGrid;
  *
  * @author Efstathios Sideris
  */
-public class BitmapRenderer {
+public class BitmapRenderer extends AbstractRenderer {
 
 	private static final boolean DEBUG = false;
 	private static final boolean DEBUG_LINES = false;
@@ -61,8 +60,12 @@ public class BitmapRenderer {
 	private static final String IDREGEX = "^.+_vfill$";
 	
 	Stroke normalStroke;
-	Stroke dashStroke; 
-	
+	Stroke dashStroke;
+
+	public BitmapRenderer(String file, RenderingOptions options) {
+		super(file, options);
+	}
+
 	public static void main(String[] args) throws Exception {
 		
 		
@@ -77,7 +80,7 @@ public class BitmapRenderer {
 		grid.loadFrom("tests/text/"+filename);
 		
 		Diagram diagram = new Diagram(grid, options);
-		new BitmapRenderer().renderToPNG(diagram, "tests/images/"+filename+".png", options.renderingOptions);
+		new BitmapRenderer("tests/images/"+filename+".png", options.renderingOptions).renderImage(diagram);
 		long endTime = System.currentTimeMillis();
 		long totalTime  = (endTime - startTime) / 1000;
 		System.out.println("Done in "+totalTime+"sec");
@@ -363,7 +366,9 @@ public class BitmapRenderer {
 		//handle text
 		//g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//renderTextLayer(diagram.getTextObjects().iterator());
-		
+
+		new TextCanvas(diagram.getTextObjects()).paint(g2);
+		/*
 		Iterator<DiagramText> textIt = diagram.getTextObjects().iterator();
 		while(textIt.hasNext()){
 			DiagramText text = textIt.next();
@@ -378,7 +383,7 @@ public class BitmapRenderer {
 			g2.setColor(text.getColor());
 			g2.drawString(text.getText(), text.getXPos(), text.getYPos());
 		}
-		
+		*/
 		if(options.renderDebugLines() || DEBUG_LINES){
 			Stroke debugStroke =
 			  new BasicStroke(
@@ -414,7 +419,23 @@ public class BitmapRenderer {
 		canvas.paint(g);
 		return (RenderedImage) image;
 	}
-	
+
+	@Override
+	public void renderImage(Diagram d) {
+	    RenderedImage image = renderToImage(d, getOptions());
+		try {
+			OutputStream stream = ("-".equals(super.getOutFile())) ? System.out : new PrintStream(new FileOutputStream(super.getOutFile()));
+			ImageIO.write(image, "png", stream);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.err.println("Error: Cannot write to file "+getOutFile()+" -- skipping");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.println("Error: Cannot write to file "+getOutFile()+" -- skipping");
+		}
+
+	}
+
 	private class TextCanvas extends Canvas {
 		ArrayList<DiagramText> textObjects;
 		

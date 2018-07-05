@@ -78,7 +78,7 @@ public class VisualTester {
 		ConversionOptions options = new ConversionOptions();
 		File actualFile = new File(actualDir + File.separator + textFile.getName() + ".png");
 		File expectedFile = new File(expectedDir + File.separator + textFile.getName() + ".png");
-				
+
 		System.out.println(index + ") Rendering "+textFile+" to "+actualFile);
 		
 		if(!expectedFile.exists()){
@@ -90,11 +90,8 @@ public class VisualTester {
 		grid.loadFrom(textFile.toString());
 		Diagram diagram = new Diagram(grid, options);
 
-		RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);		
+		new BitmapRenderer(actualFile.getAbsolutePath(), options.renderingOptions).renderImage(diagram);
 	
-		File file = new File(actualFile.getAbsolutePath());
-		ImageIO.write(image, "png", file);
-		
 		//compare images pixel-by-pixel
 		BufferedImage actualImage = ImageHandler.instance().loadBufferedImage(actualFile);
 		BufferedImage expectedImage = ImageHandler.instance().loadBufferedImage(expectedFile);
@@ -191,20 +188,10 @@ public class VisualTester {
 				grid.loadFrom(textFile.toString());
 				Diagram diagram = new Diagram(grid, options);
 
-				RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);
+				new BitmapRenderer(toFile.getAbsolutePath(), options.renderingOptions).renderImage(diagram);
 				
 				b = java.lang.System.nanoTime();
 		        java.lang.System.out.println( "Done in " + Math.round((b - a)/10e6) + "msec");
-				
-				try {
-					File file = new File(toFile.getAbsolutePath());
-					ImageIO.write(image, "png", file);
-				} catch (IOException e) {
-					//e.printStackTrace();
-					System.err.println("Error: Cannot write to file "+toFile);
-					System.exit(1);
-				}
-				
 			} catch (Exception e) {
 				System.err.println("!!! Failed to render: "+textFile+" !!!\n");
 				System.err.println(grid.getDebugString()+"\n");
@@ -256,27 +243,16 @@ public class VisualTester {
 				grid.loadFrom(textFile.toString());
 				Diagram diagram = new Diagram(grid, options);
 
-				RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);
+				new BitmapRenderer(toFilePng.getAbsolutePath(), options.renderingOptions).renderImage(diagram);
 
 				b = java.lang.System.nanoTime();
 		        java.lang.System.out.println( "Done in " + Math.round((b - a)/10e6) + "msec");
 
-				//png
-				try {
-					File file = new File(toFilePng.getAbsolutePath());
-					ImageIO.write(image, "png", file);
-				} catch (IOException e) {
-					//e.printStackTrace();
-					System.err.println("Error: Cannot write to file " + toFilePng);
-					System.exit(1);
-				}
 
 				//SVG
 				System.out.println("Rendering " + textFile + " to " + toFileSvg);
 				try {
-					File file = new File(toFileSvg.getAbsolutePath());
-					String content = new SVGRenderer().renderToImage(diagram, options.renderingOptions);
-					new PrintStream(new FileOutputStream(file)).print(content);
+					new SVGRenderer(toFileSvg.getAbsolutePath(), options.renderingOptions).renderImage(diagram);
 				} catch (Exception e) {
 					System.err.println("Error: Cannot write to file " + toFileSvg);
 					System.exit(1);

@@ -190,30 +190,10 @@ public class HTMLConverter extends HTMLEditorKit {
 
 			if(options.renderingOptions.getImageType() == RenderingOptions.ImageType.SVG){
 
-				String content = new SVGRenderer().renderToImage(diagram, options.renderingOptions);
-
-				try {
-
-					PrintStream stream = new PrintStream(new FileOutputStream(imageFilename));
-
-					stream.print(content);
-
-				} catch (IOException e) {
-					System.err.println("Error: Cannot write to file "+filename+" -- skipping");
-					continue;
-				}
+				new SVGRenderer(imageFilename, options.renderingOptions).renderImage(diagram);
 
 			} else {
-				RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);
-
-				try {
-					File file = new File(imageFilename);
-					ImageIO.write(image, "png", file);
-				} catch (IOException e) {
-					//e.printStackTrace();
-					System.err.println("Error: Cannot write to file "+filename+" -- skipping");
-					continue;
-				}
+				new BitmapRenderer(imageFilename, options.renderingOptions).renderImage(diagram);
 			}
 			
 			System.out.println("\t"+imageFilename);
