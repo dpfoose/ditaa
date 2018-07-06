@@ -21,59 +21,48 @@
  */
 package se.ngm.ditaaeps;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.PosixParser;
-import org.apache.commons.cli.ParseException;
+import org.stathissideris.ascii2image.core.RenderingOptions;
+import org.stathissideris.ascii2image.core.Shape3DOrderingComparator;
+import org.stathissideris.ascii2image.graphics.AbstractRenderer;
+import org.stathissideris.ascii2image.graphics.Diagram;
+import org.stathissideris.ascii2image.graphics.DiagramShape;
+import org.stathissideris.ascii2image.graphics.DiagramText;
 
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import org.stathissideris.ascii2image.core.FileUtils;
-import org.stathissideris.ascii2image.graphics.*;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
-import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
-
-
-import org.stathissideris.ascii2image.core.ConversionOptions;
-import org.stathissideris.ascii2image.core.RenderingOptions;
-import org.stathissideris.ascii2image.core.Shape3DOrderingComparator;
-import org.stathissideris.ascii2image.text.StringUtils;
-import org.stathissideris.ascii2image.text.TextGrid;
-import se.ngm.ditaaeps.EpsGraphics2D;
 
 /** Modification of the BitmapRenderer to render EPS instead of PNG.
  *
  * @author Efstathios Sideris
  * @author Mikael Brannstrom
  */
-public class EpsRenderer {
+public class EpsRenderer extends AbstractRenderer {
 
   private static final boolean DEBUG = false;
 
   private static String[] markupModeAllowedValues = {"use", "ignore", "render"};
+
+  public EpsRenderer(String toFilename, RenderingOptions renderingOptions) {
+      super(toFilename, renderingOptions);
+  }
+
+  @Override
+  public void renderImage(Diagram d) {
+    PrintWriter writer = null;
+    try {
+      writer = new PrintWriter(getOutFile());
+      renderToEps(d, writer, getOptions());
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
 
 
   /**

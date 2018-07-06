@@ -282,26 +282,18 @@ public class CommandLineConverter {
                                 || (fileExtension.length() > 0 && ImageIO.getImageWritersBySuffix(fileExtension).hasNext());
                 fileFormat = extensionIsValid ? fileExtension : "png";
             }
-			try {
-			    switch (fileFormat){
-                    case "svg":
-                        String content = new SVGRenderer().renderToImage(diagram, options.renderingOptions);
-                        PrintStream stream = stdOut ? System.out : new PrintStream(new FileOutputStream(toFilename));
-                        stream.print(content);
-                        break;
-                    case "eps":
-                        PrintWriter writer = new PrintWriter(toFilename);
-                        EpsRenderer.renderToEps(diagram, writer, options.renderingOptions);
-                        break;
-                    default:
-                        RenderedImage image = new BitmapRenderer().renderToImage(diagram, options.renderingOptions);
-                        OutputStream os = stdOut ? System.out : new FileOutputStream(toFilename);
-                        ImageIO.write(image, fileFormat, os);
-                }
-			} catch (IOException e) {
-				//e.printStackTrace();
-				System.err.println("Error: Cannot write to file "+toFilename);
-				System.exit(1);
+			switch (fileFormat){
+				case "svg":
+					SVGRenderer svgRenderer = new SVGRenderer(toFilename, options.renderingOptions);
+					svgRenderer.renderImage(diagram);
+					break;
+				case "eps":
+					EpsRenderer epsRenderer = new EpsRenderer(toFilename, options.renderingOptions);
+					epsRenderer.renderImage(diagram);
+					break;
+				default:
+					BitmapRenderer bitmapRenderer = new BitmapRenderer(toFilename, options.renderingOptions);
+					bitmapRenderer.renderImage(diagram);
 			}
 
 			//BitmapRenderer.renderToPNG(diagram, toFilename, options.renderingOptions);
