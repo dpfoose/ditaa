@@ -1,43 +1,42 @@
 /**
  * ditaa - Diagrams Through Ascii Art
- * 
+ * <p>
  * Copyright (C) 2004-2011 Efstathios Sideris
- *
+ * <p>
  * ditaa is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
- *
+ * <p>
  * ditaa is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public
  * License along with ditaa.  If not, see <http://www.gnu.org/licenses/>.
- *   
  */
 package org.stathissideris.ascii2image.core;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.stathissideris.ascii2image.graphics.CustomShapeDefinition;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+
 /**
  * Author: Usha Lokala
  *
  *
  */
-class ConfigurationParser{
+class ConfigurationParser {
     private static final boolean DEBUG = false;
 
     private static final String INLCUDE_TAG_NAME = "include";
@@ -48,25 +47,42 @@ class ConfigurationParser{
     private File configFile;
 
     private HashMap<String, CustomShapeDefinition> shapeDefinitions = new HashMap<String, CustomShapeDefinition>();
-/**
- * This method returns shapeDefinitions values
- * This gets Shapedefinitions
- */
+
+    /**
+     * This is a class main methods
+     * @param argv
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     */
+    public static void main(String argv[]) throws ParserConfigurationException,
+            SAXException, IOException {
+        ConfigurationParser parser = new ConfigurationParser();
+        parser.parseFile(new File("config.xml"));
+        parser.getShapeDefinitions();
+    }
+
+    /**
+     * This method returns shapeDefinitions values
+     * This gets Shapedefinitions
+     */
     public Collection<CustomShapeDefinition> getShapeDefinitions() {
         return shapeDefinitions.values();
     }
-/**
- * This HashMap method returns shapeDefinitions
- * @param String
- */
+
+    /**
+     * This HashMap method returns shapeDefinitions
+     * @param String
+     */
     public HashMap<String, CustomShapeDefinition> getShapeDefinitionsHash() {
         return shapeDefinitions;
     }
-/**
- * This parseFile throws ParserConfigurationException
- * returns no value
- * @param file
- */
+
+    /**
+     * This parseFile throws ParserConfigurationException
+     * returns no value
+     * @param file
+     */
     public void parseFile(File file) throws ParserConfigurationException,
             SAXException, IOException {
         configFile = file;
@@ -80,9 +96,33 @@ class ConfigurationParser{
         saxParser.parse(file, handler);
     }
 
+    private String createFilename(String baseDir, String filename) {
+        if (baseDir == null || baseDir.trim().equals("")) {
+            return filename;
+        }
+        if (baseDir.endsWith(File.separator)) {
+            return baseDir + filename;
+        }
+        return baseDir + File.separator + filename;
+    }
+
+    private boolean getBooleanFromAttributeValue(String value) {
+        value = value.toLowerCase();
+        if ("no".equals(value))
+            return false;
+        if ("false".equals(value))
+            return false;
+        if ("yes".equals(value))
+            return true;
+        if ("true".equals(value))
+            return true;
+        throw new IllegalArgumentException("value " + value
+                + " cannot be interpreted as a boolean");
+    }
+
     private class XMLHandler extends DefaultHandler {
         public void startElement(String uri, String localName, String qName,
-                Attributes attributes) {
+                                 Attributes attributes) {
             if (qName.equals(SHAPE_GROUP_TAG_NAME)) {
                 if (attributes.getLength() == 1) {
                     currentDir = attributes.getValue(0).trim();
@@ -155,7 +195,7 @@ class ConfigurationParser{
 
                     if (!includedFile.isAbsolute()) {
                         includedFile = new File(createFilename(configFile
-                                .getParentFile().getAbsolutePath(),
+                                        .getParentFile().getAbsolutePath(),
                                 includedFile.getPath()));
                     }
 
@@ -181,44 +221,6 @@ class ConfigurationParser{
                 }
             }
         }
-    }
-
-    private String createFilename(String baseDir, String filename) {
-        if (baseDir == null || baseDir.trim().equals("")) {
-            return filename;
-        }
-        if (baseDir.endsWith(File.separator)) {
-            return baseDir + filename;
-        }
-        return baseDir + File.separator + filename;
-    }
-
-    private boolean getBooleanFromAttributeValue(String value) {
-        value = value.toLowerCase();
-        if ("no".equals(value))
-            return false;
-        if ("false".equals(value))
-            return false;
-        if ("yes".equals(value))
-            return true;
-        if ("true".equals(value))
-            return true;
-        throw new IllegalArgumentException("value " + value
-                + " cannot be interpreted as a boolean");
-    }
-
-        /**
-         * This is a class main methods
-         * @param argv
-         * @throws ParserConfigurationException
-         * @throws SAXException
-         * @throws IOException
-         */
-    public static void main(String argv[]) throws ParserConfigurationException,
-            SAXException, IOException {
-        ConfigurationParser parser = new ConfigurationParser();
-        parser.parseFile(new File("config.xml"));
-        parser.getShapeDefinitions();
     }
 
 }

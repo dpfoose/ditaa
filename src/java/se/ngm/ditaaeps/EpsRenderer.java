@@ -35,291 +35,229 @@ import java.awt.geom.Rectangle2D;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
-/** Modification of the BitmapRenderer to render EPS instead of PNG.
+/**
+ * Modification of the BitmapRenderer to render EPS instead of PNG.
  *
  * @author Efstathios Sideris
  * @author Mikael Brannstrom
  */
 public class EpsRenderer extends AbstractRenderer {
 
-  private static final boolean DEBUG = false;
+    private static final boolean DEBUG = false;
 
-  private static String[] markupModeAllowedValues = {"use", "ignore", "render"};
+    private static String[] markupModeAllowedValues = {"use", "ignore", "render"};
 
-  public EpsRenderer(String toFilename, RenderingOptions renderingOptions) {
-      super(toFilename, renderingOptions);
-  }
-
-  @Override
-  public void renderImage(Diagram d) {
-    PrintWriter writer = null;
-    try {
-      writer = new PrintWriter(getOutFile());
-      renderToEps(d, writer, getOptions());
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
+    public EpsRenderer(String toFilename, RenderingOptions renderingOptions) {
+        super(toFilename, renderingOptions);
     }
-  }
 
+    /**
+     * Render an EPS image from input <code>diagram</code> using <code>options</code> config parameters.
+     *
+     * @param diagram
+     * @param out
+     * @param options
+     */
+    private static void renderToEps(Diagram diagram, PrintWriter out, RenderingOptions options) {
+        //RenderedImage renderedImage = image;
+        EpsGraphics2D g2 = new EpsGraphics2D(out, new Rectangle2D.Double(0, -diagram.getHeight(), diagram.getWidth(), diagram.getHeight()));
 
-  /**
-   * Render an EPS image from input <code>diagram</code> using <code>options</code> config parameters.
-   * @param diagram
-   * @param out
-   * @param options
-   */
-  public static void renderToEps(Diagram diagram, PrintWriter out, RenderingOptions options) {
-    //RenderedImage renderedImage = image;
-    EpsGraphics2D g2 = new EpsGraphics2D(out, new Rectangle2D.Double(0, -diagram.getHeight(), diagram.getWidth(), diagram.getHeight()));
+        g2.scale(1, -1); // g2 origo is top-left, eps is bottom-left
 
-    g2.scale(1, -1); // g2 origo is top-left, eps is bottom-left
+        Object antialiasSetting = antialiasSetting = RenderingHints.VALUE_ANTIALIAS_OFF;
+        if (options.performAntialias())
+            antialiasSetting = RenderingHints.VALUE_ANTIALIAS_ON;
 
-    Object antialiasSetting = antialiasSetting = RenderingHints.VALUE_ANTIALIAS_OFF;
-    if(options.performAntialias())
-      antialiasSetting = RenderingHints.VALUE_ANTIALIAS_ON;
+        //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasSetting);
 
-    //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasSetting);
-
-    g2.setColor(Color.white);
-    //TODO: find out why the next line does not work
-    //g2.fillRect(0, 0, image.getWidth()+10, image.getHeight()+10);
+        g2.setColor(Color.white);
+        //TODO: find out why the next line does not work
+        //g2.fillRect(0, 0, image.getWidth()+10, image.getHeight()+10);
     /*for(int y = 0; y < diagram.getHeight(); y ++)
       g2.drawLine(0, y, diagram.getWidth(), y);*/
 
-    g2.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
+        g2.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
 
-    ArrayList shapes = diagram.getAllDiagramShapes();
+        ArrayList<DiagramShape> shapes = diagram.getAllDiagramShapes();
 
-    if(DEBUG) System.out.println("Rendering "+shapes.size()+" shapes (groups flattened)");
+        if (DEBUG) System.out.println("Rendering " + shapes.size() + " shapes (groups flattened)");
 
-    Iterator shapesIt;
-    if(options.dropShadows()){
-      //render shadows
-      shapesIt = shapes.iterator();
-      while(shapesIt.hasNext()){
-        DiagramShape shape = (DiagramShape) shapesIt.next();
+        Iterator shapesIt;
+        if (options.dropShadows()) {
+            //render shadows
+            for (DiagramShape shape : shapes) {
+                if (shape.getPoints().isEmpty()) continue;
+                GeneralPath path = shape.makeIntoRenderPath(diagram, options);
+                float offset = diagram.getMinimumOfCellDimension() / 3.333f;
+                if (path != null && shape.dropsShadow()) {
+                    GeneralPath shadow = new GeneralPath(path);
+                    AffineTransform translate = new AffineTransform();
+                    translate.setToTranslation(offset, offset);
+                    shadow.transform(translate);
+                    g2.setColor(new Color(150, 150, 150));
+                    g2.fill(shadow);
+                }
+            }
 
-        if(shape.getPoints().isEmpty()) continue;
 
-        //GeneralPath path = shape.makeIntoPath();
-        GeneralPath path;
-        path = shape.makeIntoRenderPath(diagram, options);
+            //blur shadows
 
-        float offset = diagram.getMinimumOfCellDimension() / 3.333f;
-
-        if(path != null && shape.dropsShadow()){
-          GeneralPath shadow = new GeneralPath(path);
-          AffineTransform translate = new AffineTransform();
-          translate.setToTranslation(offset, offset);
-          shadow.transform(translate);
-          g2.setColor(new Color(150,150,150));
-          g2.fill(shadow);
-
+            //            if(true) {
+            //                int blurRadius = 6;
+            //                int blurRadius2 = blurRadius * blurRadius;
+            //                float blurRadius2F = blurRadius2;
+            //                float weight = 1.0f / blurRadius2F;
+            //                float[] elements = new float[blurRadius2];
+            //                for (int k = 0; k < blurRadius2; k++)
+            //                    elements[k] = weight;
+            //                Kernel myKernel = new Kernel(blurRadius, blurRadius, elements);
+            //
+            //                //if EDGE_NO_OP is not selected, EDGE_ZERO_FILL is the default which creates a black border
+            //                ConvolveOp simpleBlur =
+            //                        new ConvolveOp(myKernel, ConvolveOp.EDGE_NO_OP, null);
+            //                //BufferedImage destination = new BufferedImage(image.getWidth()+blurRadius, image.getHeight()+blurRadius, image.getType());
+            //                BufferedImage destination =
+            //                        new BufferedImage(
+            //                        image.getWidth(),
+            //                        image.getHeight(),
+            //                        image.getType());
+            //                simpleBlur.filter(image, destination);
+            //                //destination = destination.getSubimage(blurRadius/2, blurRadius/2, image.getWidth(), image.getHeight());
+            //                g2 = destination.createGraphics();
+            //                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasSetting);
+            //                renderedImage = destination;
+            //            }
         }
-      }
 
 
-      //blur shadows
+        //fill and stroke
 
-      //            if(true) {
-      //                int blurRadius = 6;
-      //                int blurRadius2 = blurRadius * blurRadius;
-      //                float blurRadius2F = blurRadius2;
-      //                float weight = 1.0f / blurRadius2F;
-      //                float[] elements = new float[blurRadius2];
-      //                for (int k = 0; k < blurRadius2; k++)
-      //                    elements[k] = weight;
-      //                Kernel myKernel = new Kernel(blurRadius, blurRadius, elements);
-      //
-      //                //if EDGE_NO_OP is not selected, EDGE_ZERO_FILL is the default which creates a black border
-      //                ConvolveOp simpleBlur =
-      //                        new ConvolveOp(myKernel, ConvolveOp.EDGE_NO_OP, null);
-      //                //BufferedImage destination = new BufferedImage(image.getWidth()+blurRadius, image.getHeight()+blurRadius, image.getType());
-      //                BufferedImage destination =
-      //                        new BufferedImage(
-      //                        image.getWidth(),
-      //                        image.getHeight(),
-      //                        image.getType());
-      //                simpleBlur.filter(image, destination);
-      //                //destination = destination.getSubimage(blurRadius/2, blurRadius/2, image.getWidth(), image.getHeight());
-      //                g2 = destination.createGraphics();
-      //                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasSetting);
-      //                renderedImage = destination;
-      //            }
-    }
+        float dashInterval = Math.min(diagram.getCellWidth(), diagram.getCellHeight()) / 2;
+        //Stroke normalStroke = g2.getStroke();
 
+        float strokeWeight = diagram.getMinimumOfCellDimension() / 10;
 
-    //fill and stroke
+        Stroke normalStroke =
+                new BasicStroke(
+                        strokeWeight,
+                        //10,
+                        BasicStroke.CAP_ROUND,
+                        BasicStroke.JOIN_ROUND
+                );
 
-    float dashInterval = Math.min(diagram.getCellWidth(), diagram.getCellHeight()) / 2;
-    //Stroke normalStroke = g2.getStroke();
+        Stroke dashStroke =
+                new BasicStroke(
+                        strokeWeight,
+                        BasicStroke.CAP_BUTT,
+                        BasicStroke.JOIN_ROUND,
+                        0,
+                        new float[]{dashInterval},
+                        0
+                );
 
-    float strokeWeight = diagram.getMinimumOfCellDimension() / 10;
+        //filter shapes by type
+        List<DiagramShape> storageShapes = shapes.stream()
+                .filter(shape -> shape.getType() == DiagramShape.TYPE_STORAGE)
+                .collect(Collectors.toList());
+        List<DiagramShape> pointMarkers = shapes.stream()
+                .filter(shape -> shape.getType() == DiagramShape.TYPE_POINT_MARKER)
+                .collect(Collectors.toList());
+        List<DiagramShape> customShapes = shapes.stream()
+                .filter(shape -> shape.getType() == DiagramShape.TYPE_CUSTOM)
+                .collect(Collectors.toList());
+        List<DiagramShape> otherShapes = shapes.stream()
+                .filter(shape -> shape.getType() != DiagramShape.TYPE_CUSTOM
+                        && shape.getType() != DiagramShape.TYPE_STORAGE
+                        && shape.getType() != DiagramShape.TYPE_POINT_MARKER
+                        && !shape.getPoints().isEmpty())
+                .collect(Collectors.toList());
 
-    Stroke normalStroke =
-      new BasicStroke(
-          strokeWeight,
-          //10,
-          BasicStroke.CAP_ROUND,
-          BasicStroke.JOIN_ROUND
-          );
-
-    Stroke dashStroke =
-      new BasicStroke(
-          strokeWeight,
-          BasicStroke.CAP_BUTT,
-          BasicStroke.JOIN_ROUND,
-          0,
-          new float[] {dashInterval},
-          0
-          );
-
-
-    //find storage shapes
-    ArrayList storageShapes = new ArrayList();
-    shapesIt = shapes.iterator();
-    while(shapesIt.hasNext()){
-      DiagramShape shape = (DiagramShape) shapesIt.next();
-      if(shape.getType() == DiagramShape.TYPE_STORAGE) {
-        storageShapes.add(shape);
-        continue;
-      }
-    }
-
-
-
-    //render storage shapes
-    //special case since they are '3d' and should be
-    //rendered bottom to top
-    //TODO: known bug: if a storage object is within a bigger normal box, it will be overwritten in the main drawing loop
-    //(BUT this is not possible since tags are applied to all shapes overlaping shapes)
-
-
-    Collections.sort(storageShapes, new Shape3DOrderingComparator());
-
-    g2.setStroke(normalStroke);
-    shapesIt = storageShapes.iterator();
-    while(shapesIt.hasNext()){
-      DiagramShape shape = (DiagramShape) shapesIt.next();
-
-      GeneralPath path;
-      path = shape.makeIntoRenderPath(diagram, options);
-      if(!shape.isStrokeDashed()) {
-        if(shape.getFillColor() != null)
-          g2.setColor(shape.getFillColor());
-        else
-          g2.setColor(Color.white);
-        g2.fill(path);
-      }
-
-      if(shape.isStrokeDashed())
-        g2.setStroke(dashStroke);
-      else
+        //render storage shapes
+        //special case since they are '3d' and should be
+        //rendered bottom to top
+        //TODO: known bug: if a storage object is within a bigger normal box, it will be overwritten in the main drawing loop
+        //(BUT this is not possible since tags are applied to all shapes overlaping shapes)
+        storageShapes.sort(new Shape3DOrderingComparator());
         g2.setStroke(normalStroke);
-      g2.setColor(shape.getStrokeColor());
-      g2.draw(path);
+        for (DiagramShape shape : storageShapes) {
+            GeneralPath path;
+            path = shape.makeIntoRenderPath(diagram, options);
+            if (!shape.isStrokeDashed()) {
+                g2.setColor(shape.getFillColor() != null ? shape.getFillColor() : Color.white);
+                g2.fill(path);
+            }
+            g2.setStroke(shape.isStrokeDashed() ? dashStroke : normalStroke);
+            g2.setColor(shape.getStrokeColor());
+            g2.draw(path);
+        }
+
+
+        //render the rest of the shapes
+        shapesIt = shapes.iterator();
+        for (DiagramShape shape : otherShapes) {
+            GeneralPath path = shape.makeIntoRenderPath(diagram, options);
+            if (path != null && shape.isClosed() && !shape.isStrokeDashed()) {
+                g2.setColor(shape.getFillColor() != null ? shape.getFillColor() : Color.white);
+                g2.fill(path);
+            }
+            if (shape.getType() != DiagramShape.TYPE_ARROWHEAD) {
+                g2.setColor(shape.getStrokeColor());
+                g2.setStroke(shape.isStrokeDashed() ? dashStroke : normalStroke);
+                g2.draw(path);
+            }
+        }
+
+        //render point markers
+        g2.setStroke(normalStroke);
+        for (DiagramShape shape : pointMarkers) {
+            GeneralPath path = shape.makeIntoRenderPath(diagram, options);
+            g2.setColor(Color.white);
+            g2.fill(path);
+            g2.setColor(shape.getStrokeColor());
+            g2.draw(path);
+        }
+
+
+        //handle text
+        for (DiagramText text : diagram.getTextObjects()) {
+            g2.setColor(text.getColor());
+            g2.setFont(text.getFont());
+            g2.drawString(text.getText(), text.getXPos(), text.getYPos());
+        }
+
+        if (options.renderDebugLines() || DEBUG) {
+            Stroke debugStroke =
+                    new BasicStroke(
+                            1,
+                            BasicStroke.CAP_ROUND,
+                            BasicStroke.JOIN_ROUND
+                    );
+            g2.setStroke(debugStroke);
+            g2.setColor(new Color(170, 170, 170));
+            g2.setXORMode(Color.white);
+            for (int x = 0; x < diagram.getWidth(); x += diagram.getCellWidth())
+                g2.drawLine(x, 0, x, diagram.getHeight());
+            for (int y = 0; y < diagram.getHeight(); y += diagram.getCellHeight())
+                g2.drawLine(0, y, diagram.getWidth(), y);
+        }
+
+
+        g2.dispose();
     }
 
 
-    //render the rest of the shapes
-    ArrayList pointMarkers = new ArrayList();
-    shapesIt = shapes.iterator();
-    while(shapesIt.hasNext()){
-      DiagramShape shape = (DiagramShape) shapesIt.next();
-      if(shape.getType() == DiagramShape.TYPE_POINT_MARKER) {
-        pointMarkers.add(shape);
-        continue;
-      }
-      if(shape.getType() == DiagramShape.TYPE_STORAGE) {
-        continue;
-      }
-
-
-      if(shape.getPoints().isEmpty()) continue;
-
-      int size = shape.getPoints().size();
-
-      GeneralPath path;
-      path = shape.makeIntoRenderPath(diagram, options);
-
-      if(path != null && shape.isClosed() && !shape.isStrokeDashed()){
-        if(shape.getFillColor() != null)
-          g2.setColor(shape.getFillColor());
-        else
-          g2.setColor(Color.white);
-        g2.fill(path);
-      }
-      if(shape.getType() != DiagramShape.TYPE_ARROWHEAD){
-        g2.setColor(shape.getStrokeColor());
-        if(shape.isStrokeDashed())
-          g2.setStroke(dashStroke);
-        else
-          g2.setStroke(normalStroke);
-        g2.draw(path);
-      }
+    @Override
+    public void renderImage(Diagram d) {
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(getOutFile());
+            renderToEps(d, writer, getOptions());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
-
-    //render point markers
-
-    g2.setStroke(normalStroke);
-    shapesIt = pointMarkers.iterator();
-    while(shapesIt.hasNext()){
-      DiagramShape shape = (DiagramShape) shapesIt.next();
-      //if(shape.getType() != DiagramShape.TYPE_POINT_MARKER) continue;
-
-      GeneralPath path;
-      path = shape.makeIntoRenderPath(diagram, options);
-
-      g2.setColor(Color.white);
-      g2.fill(path);
-      g2.setColor(shape.getStrokeColor());
-      g2.draw(path);
-    }
-
-
-    //handle text
-    //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-
-    Iterator textIt = diagram.getTextObjects().iterator();
-    while(textIt.hasNext()){
-      DiagramText text = (DiagramText) textIt.next();
-      g2.setColor(text.getColor());
-      g2.setFont(text.getFont());
-      g2.drawString(text.getText(), text.getXPos(), text.getYPos());
-    }
-
-
-    if(options.renderDebugLines() || DEBUG){
-      Stroke debugStroke =
-        new BasicStroke(
-            1,
-            BasicStroke.CAP_ROUND,
-            BasicStroke.JOIN_ROUND
-            );
-      g2.setStroke(debugStroke);
-      g2.setColor(new Color(170, 170, 170));
-      g2.setXORMode(Color.white);
-      for(int x = 0; x < diagram.getWidth(); x += diagram.getCellWidth())
-        g2.drawLine(x, 0, x, diagram.getHeight());
-      for(int y = 0; y < diagram.getHeight(); y += diagram.getCellHeight())
-        g2.drawLine(0, y, diagram.getWidth(), y);
-    }
-
-
-    g2.dispose();
-  }
-
-  public static boolean isColorDark(Color color){
-    int brightness = Math.max(color.getRed(), color.getGreen());
-    brightness = Math.max(color.getBlue(), brightness);
-    if(brightness < 200) {
-      if(DEBUG) System.out.println("Color "+color+" is dark");
-      return true;
-    }
-    if(DEBUG) System.out.println("Color "+color+" is not dark");
-    return false;
-  }
 }

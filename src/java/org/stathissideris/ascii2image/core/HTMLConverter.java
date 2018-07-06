@@ -1,46 +1,37 @@
 /**
  * ditaa - Diagrams Through Ascii Art
- * 
+ * <p>
  * Copyright (C) 2004-2011 Efstathios Sideris
- *
+ * <p>
  * ditaa is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
- *
+ * <p>
  * ditaa is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public
  * License along with ditaa.  If not, see <http://www.gnu.org/licenses/>.
- *   
  */
 package org.stathissideris.ascii2image.core;
 
-import java.awt.image.RenderedImage;
-import java.io.*;
-import java.util.HashMap;
-
-import javax.imageio.ImageIO;
-import javax.swing.text.html.HTMLEditorKit;
-
-import net.htmlparser.jericho.Attribute;
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.OutputDocument;
-import net.htmlparser.jericho.Source;
-import net.htmlparser.jericho.StartTag;
-
+import net.htmlparser.jericho.*;
 import org.stathissideris.ascii2image.graphics.BitmapRenderer;
 import org.stathissideris.ascii2image.graphics.Diagram;
 import org.stathissideris.ascii2image.graphics.SVGRenderer;
 import org.stathissideris.ascii2image.text.TextGrid;
 
+import javax.swing.text.html.HTMLEditorKit;
+import java.io.*;
+import java.util.HashMap;
+
 /**
- * 
+ *
  * TODO: incomplete class
- * 
+ *
  * @author Usha Lokala
  */
 
@@ -49,177 +40,177 @@ import org.stathissideris.ascii2image.text.TextGrid;
  */
 public class HTMLConverter extends HTMLEditorKit {
 
-	private static final String TAG_CLASS = "textdiagram";
-	private static final String testDir = "tests/html-converter/";
+    private static final String TAG_CLASS = "textdiagram";
+    private static final String testDir = "tests/html-converter/";
 
-	/**
-	 * This is main method
-	 * @param args
-	 */
-	public static void main(String[] args){		
-		new HTMLConverter().convertHTMLFile(
-			testDir + "index.html", 
-			testDir + "index2.html", 
-			"ditaa_diagram", 
-			"images", 
-			null);
-	}
+    /**
+     * This is main method
+     * @param args
+     */
+    public static void main(String[] args) {
+        new HTMLConverter().convertHTMLFile(
+                testDir + "index.html",
+                testDir + "index2.html",
+                "ditaa_diagram",
+                "images",
+                null);
+    }
 
-	/**
-	 * This is convertHTMLFile and returns boolean value
-	 * @param filename
-	 * @param targetFilename
-	 * @param imageBaseFilename
-	 * @param imageDirName relative to the location of the target HTML document
-	 * @param options
-	 * @return boolean
-	 */
-	public boolean convertHTMLFile(
-			String filename,
-			String targetFilename,
-			String imageBaseFilename,
-			String imageDirName,
-			ConversionOptions options){
-		
-		if(options == null){
-			options = new ConversionOptions();
-		}
-				
-		BufferedReader in = null;
-		try {
-			in = new BufferedReader(new FileReader(filename));
-		} catch (FileNotFoundException e) {
-			//e.printStackTrace();
-			System.err.println("Error: cannot read file " + filename);
-			return false;
-		}
-		
-		String htmlText = "";
-		
-		try {
-			while(in.ready()){
-				htmlText += in.readLine()+"\n";
-			}
-			in.close();
-		} catch (IOException e1) {
-			//e1.printStackTrace();
-			System.err.println("Error while reading file " + filename);
-			return false;
-		}
-		
-		System.out.print("Converting HTML file ("+filename+" -> "+targetFilename+")... ");
-		
-		Source source = new Source(htmlText);
-		OutputDocument outputDocument = new OutputDocument(source);
-		
-		int index = 1;
-		HashMap<String, String> diagramList = new HashMap<String, String>();
-		for(Element element : source.getAllElements("pre")) {
-			StartTag tag = element.getStartTag();
-			Attribute classAttr = tag.getAttributes().get("class");
-			if(classAttr != null
-					&& classAttr.hasValue()
-					&& classAttr.getValue().equals(TAG_CLASS)) {
-				
-				String baseFilename = imageBaseFilename;
-				
-				String ext = options.renderingOptions.getImageType() == RenderingOptions.ImageType.SVG ? ".svg" : ".png";
-				
-				String URL;
-				Attribute nameAttr = tag.getAttributes().get("id");
-				if(nameAttr != null
-						&& nameAttr.hasValue()) {
-					baseFilename = makeFilenameFromTagName(nameAttr.getValue());
-					URL = imageDirName + "/" + baseFilename + ext;
-				} else {
-					URL = imageDirName + "/" + baseFilename + "_" + index + ext;
-					index++;
-				}
+    /**
+     * This is convertHTMLFile and returns boolean value
+     * @param filename
+     * @param targetFilename
+     * @param imageBaseFilename
+     * @param imageDirName relative to the location of the target HTML document
+     * @param options
+     * @return boolean
+     */
+    public boolean convertHTMLFile(
+            String filename,
+            String targetFilename,
+            String imageBaseFilename,
+            String imageDirName,
+            ConversionOptions options) {
 
-				outputDocument.replace(element, "<img src=\""+URL+"\" />");
-				diagramList.put(URL, element.getContent().toString());
-			}
-		}
-		
-		if(diagramList.isEmpty()){
-			System.out.println("\nHTML document does not contain any " +
-				"<pre> tags with their class attribute set to \""+TAG_CLASS+"\". Nothing to do.");
-			
-			//TODO: should return the method with appropriate exit code instead
-			System.exit(0);
-		}
-		
-		FileWriter out;
-		try {
-			out = new FileWriter(targetFilename);
-			outputDocument.writeTo(out);
-			//out.flush();
-			//out.close();
-		} catch (IOException e2) {
-			System.err.println("Error while writing to file " + targetFilename);
-			return false;
-		} 
+        if (options == null) {
+            options = new ConversionOptions();
+        }
 
-		
-		System.out.println("done");
-		
-		
-		System.out.println("Generating diagrams... ");
-		
-		File imageDir = new File(new File(targetFilename).getParent() + File.separator + imageDirName);
-		if(!imageDir.exists()){
-			if(!imageDir.mkdir()){
-				System.err.println("Could not create directory " + imageDirName);
-				return false;
-			}
-		}
-		
-		for(String URL : diagramList.keySet()) {
-			String text = diagramList.get(URL);
-			String imageFilename = new File(targetFilename).getParent() + File.separator + URL;
-			if(new File(imageFilename).exists() && !options.processingOptions.overwriteFiles()){
-				System.out.println("Error: Cannot overwrite file "+URL+", file already exists." +
-					" Use the --overwrite option if you would like to allow file overwrite.");
-				continue;
-			}
-	
-			TextGrid grid = new TextGrid();
-			grid.addToMarkupTags(options.processingOptions.getCustomShapes().keySet());
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(filename));
+        } catch (FileNotFoundException e) {
+            //e.printStackTrace();
+            System.err.println("Error: cannot read file " + filename);
+            return false;
+        }
 
-			try {
-				grid.initialiseWithText(text, options.processingOptions);
-			} catch (UnsupportedEncodingException e1) {
-				System.err.println("Error: "+e1.getMessage());
-				System.exit(1);
-			}
+        String htmlText = "";
 
-			Diagram diagram = new Diagram(grid, options);
+        try {
+            while (in.ready()) {
+                htmlText += in.readLine() + "\n";
+            }
+            in.close();
+        } catch (IOException e1) {
+            //e1.printStackTrace();
+            System.err.println("Error while reading file " + filename);
+            return false;
+        }
 
-			if(options.renderingOptions.getImageType() == RenderingOptions.ImageType.SVG){
+        System.out.print("Converting HTML file (" + filename + " -> " + targetFilename + ")... ");
 
-				new SVGRenderer(imageFilename, options.renderingOptions).renderImage(diagram);
+        Source source = new Source(htmlText);
+        OutputDocument outputDocument = new OutputDocument(source);
 
-			} else {
-				new BitmapRenderer(imageFilename, options.renderingOptions).renderImage(diagram);
-			}
-			
-			System.out.println("\t"+imageFilename);
-		}
-		
-		System.out.println("\n...done");
-		
-		return true;
-	}
+        int index = 1;
+        HashMap<String, String> diagramList = new HashMap<String, String>();
+        for (Element element : source.getAllElements("pre")) {
+            StartTag tag = element.getStartTag();
+            Attribute classAttr = tag.getAttributes().get("class");
+            if (classAttr != null
+                    && classAttr.hasValue()
+                    && classAttr.getValue().equals(TAG_CLASS)) {
+
+                String baseFilename = imageBaseFilename;
+
+                String ext = options.renderingOptions.getImageType() == RenderingOptions.ImageType.SVG ? ".svg" : ".png";
+
+                String URL;
+                Attribute nameAttr = tag.getAttributes().get("id");
+                if (nameAttr != null
+                        && nameAttr.hasValue()) {
+                    baseFilename = makeFilenameFromTagName(nameAttr.getValue());
+                    URL = imageDirName + "/" + baseFilename + ext;
+                } else {
+                    URL = imageDirName + "/" + baseFilename + "_" + index + ext;
+                    index++;
+                }
+
+                outputDocument.replace(element, "<img src=\"" + URL + "\" />");
+                diagramList.put(URL, element.getContent().toString());
+            }
+        }
+
+        if (diagramList.isEmpty()) {
+            System.out.println("\nHTML document does not contain any " +
+                    "<pre> tags with their class attribute set to \"" + TAG_CLASS + "\". Nothing to do.");
+
+            //TODO: should return the method with appropriate exit code instead
+            System.exit(0);
+        }
+
+        FileWriter out;
+        try {
+            out = new FileWriter(targetFilename);
+            outputDocument.writeTo(out);
+            //out.flush();
+            //out.close();
+        } catch (IOException e2) {
+            System.err.println("Error while writing to file " + targetFilename);
+            return false;
+        }
+
+
+        System.out.println("done");
+
+
+        System.out.println("Generating diagrams... ");
+
+        File imageDir = new File(new File(targetFilename).getParent() + File.separator + imageDirName);
+        if (!imageDir.exists()) {
+            if (!imageDir.mkdir()) {
+                System.err.println("Could not create directory " + imageDirName);
+                return false;
+            }
+        }
+
+        for (String URL : diagramList.keySet()) {
+            String text = diagramList.get(URL);
+            String imageFilename = new File(targetFilename).getParent() + File.separator + URL;
+            if (new File(imageFilename).exists() && !options.processingOptions.overwriteFiles()) {
+                System.out.println("Error: Cannot overwrite file " + URL + ", file already exists." +
+                        " Use the --overwrite option if you would like to allow file overwrite.");
+                continue;
+            }
+
+            TextGrid grid = new TextGrid();
+            grid.addToMarkupTags(options.processingOptions.getCustomShapes().keySet());
+
+            try {
+                grid.initialiseWithText(text, options.processingOptions);
+            } catch (UnsupportedEncodingException e1) {
+                System.err.println("Error: " + e1.getMessage());
+                System.exit(1);
+            }
+
+            Diagram diagram = new Diagram(grid, options);
+
+            if (options.renderingOptions.getImageType() == RenderingOptions.ImageType.SVG) {
+
+                new SVGRenderer(imageFilename, options.renderingOptions).renderImage(diagram);
+
+            } else {
+                new BitmapRenderer(imageFilename, options.renderingOptions).renderImage(diagram);
+            }
+
+            System.out.println("\t" + imageFilename);
+        }
+
+        System.out.println("\n...done");
+
+        return true;
+    }
 	
 	/*
 	private static String relativizePath(String base, String path) {
 		return new File(base).toURI().relativize(new File(path).toURI()).getPath();
 	}
 	*/
-	
-	private String makeFilenameFromTagName(String tagName){
-		tagName = tagName.replace(' ', '_');
-		return tagName;
-	}
-	
+
+    private String makeFilenameFromTagName(String tagName) {
+        tagName = tagName.replace(' ', '_');
+        return tagName;
+    }
+
 }

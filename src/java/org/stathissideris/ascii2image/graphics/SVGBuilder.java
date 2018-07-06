@@ -1,18 +1,29 @@
 package org.stathissideris.ascii2image.graphics;
 
 import org.stathissideris.ascii2image.core.RenderingOptions;
-import org.stathissideris.ascii2image.core.ShapeAreaComparator;
 import org.stathissideris.ascii2image.core.Shape3DOrderingComparator;
+import org.stathissideris.ascii2image.core.ShapeAreaComparator;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Jean Lazarou.
  */
 public class SVGBuilder {
+
+    private final Diagram diagram;
+    private final RenderingOptions options;
+    private final StringBuilder layer0 = new StringBuilder();
+    private final StringBuilder layer1 = new StringBuilder();
+    private final StringBuilder layer2 = new StringBuilder();
+    private final StringBuilder layer3 = new StringBuilder();
+    private final String normalStroke;
+    private final String dashStroke;
 
     SVGBuilder(Diagram diagram, RenderingOptions options) {
 
@@ -32,6 +43,20 @@ public class SVGBuilder {
 
     }
 
+    private static String colorToHex(Color color) {
+        return String.format("#%s%s%s",
+                toHex(color.getRed()),
+                toHex(color.getGreen()),
+                toHex(color.getBlue())
+        );
+    }
+
+    private static String toHex(int n) {
+        String hex = Integer.toHexString(n);
+
+        return n > 15 ? hex : "0" + hex;
+    }
+
     public String build() {
 
         return openSVGTag() + definitions() + render() + "</svg>";
@@ -42,24 +67,24 @@ public class SVGBuilder {
 
         String DEFS =
                 "  <defs>\n%s" +
-                "    <filter id='f2' x='0' y='0' width='200%%' height='200%%'>\n" +
-                "      <feOffset result='offOut' in='SourceGraphic' dx='5' dy='5' />\n" +
-                "      <feGaussianBlur result='blurOut' in='offOut' stdDeviation='3' />\n" +
-                "      <feBlend in='SourceGraphic' in2='blurOut' mode='normal' />\n" +
-                "    </filter>\n" +
-                "  </defs>\n";
+                        "    <filter id='f2' x='0' y='0' width='200%%' height='200%%'>\n" +
+                        "      <feOffset result='offOut' in='SourceGraphic' dx='5' dy='5' />\n" +
+                        "      <feGaussianBlur result='blurOut' in='offOut' stdDeviation='3' />\n" +
+                        "      <feBlend in='SourceGraphic' in2='blurOut' mode='normal' />\n" +
+                        "    </filter>\n" +
+                        "  </defs>\n";
 
         if (options.getFontURL() == null) {
             return String.format(DEFS, "");
         }
 
         String fontStyle =
-            "    <style type='text/css'>\n" +
-            "      @font-face {\n" +
-            "        font-family: %s;\n" +
-            "        src: url('%s');\n" +
-            "      }\n" +
-            "    </style>\n";
+                "    <style type='text/css'>\n" +
+                        "      @font-face {\n" +
+                        "        font-family: %s;\n" +
+                        "        src: url('%s');\n" +
+                        "      }\n" +
+                        "    </style>\n";
 
         return String.format(DEFS, String.format(fontStyle, options.getFontFamily(), options.getFontURL()));
 
@@ -69,12 +94,12 @@ public class SVGBuilder {
 
         String HEADER =
                 "<?xml version='1.0' encoding='UTF-8' standalone='no'?>\n" +
-                "<svg \n" +
-                "    xmlns='http://www.w3.org/2000/svg'\n" +
-                "    width='%d'\n" +
-                "    height='%d'\n" +
-                "    %s\n" +
-                "    version='1.0'>\n";
+                        "<svg \n" +
+                        "    xmlns='http://www.w3.org/2000/svg'\n" +
+                        "    width='%d'\n" +
+                        "    height='%d'\n" +
+                        "    %s\n" +
+                        "    version='1.0'>\n";
 
         return String.format(
                 HEADER,
@@ -86,11 +111,8 @@ public class SVGBuilder {
     }
 
     private String render() {
-
         backgroundLayer();
-
-        renderStorageShapes();
-        renderRestOfShapes();
+        renderShapes();
         renderTexts();
 
         return "  <g stroke-width='1' stroke-linecap='square' stroke-linejoin='round'>\n" +
@@ -102,92 +124,56 @@ public class SVGBuilder {
 
     }
 
-    private void renderStorageShapes() {
-
-        ArrayList<DiagramShape> shapes = diagram.getAllDiagramShapes();
-
-        ArrayList<DiagramShape> storageShapes = findSorageShapes(shapes);
-
+    private void renderStorageShapes(List<DiagramShape> storageShapes) {
         storageShapes.sort(new Shape3DOrderingComparator());
-
         for (DiagramShape shape : storageShapes) {
-
             GeneralPath path = shape.makeIntoRenderPath(diagram, options);
-
             SVGCommands commands = new SVGCommands(path);
 
             String fill = "none";
             String color = "white";
 
-            if(!shape.isStrokeDashed()) {
-
+            if (!shape.isStrokeDashed()) {
                 renderShadow(commands);
-
-                if(shape.getFillColor() != null)
-                    fill = colorToHex(shape.getFillColor());
-                else
-                    fill = colorToHex(Color.white);
-
+                fill = shape.getFillColor() != null ? colorToHex(shape.getFillColor()) : colorToHex(Color.white);
             }
 
             renderPath(shape, commands, color, fill);
-
             renderPath(shape, commands, colorToHex(shape.getStrokeColor()), "none");
-
         }
-
     }
 
-    private ArrayList<DiagramShape> findSorageShapes(ArrayList<DiagramShape> shapes) {
-
-        ArrayList<DiagramShape> storageShapes = new ArrayList<>();
-
-        for (DiagramShape shape : shapes) {
-
-            if(shape.getType() == DiagramShape.TYPE_STORAGE) {
-                storageShapes.add(shape);
-            }
-
-        }
-
-        return storageShapes;
-
-    }
-
-    private void renderRestOfShapes() {
+    private void renderShapes() {
 
         ArrayList<DiagramShape> shapes = diagram.getAllDiagramShapes();
-        ArrayList<DiagramShape> pointMarkers = new ArrayList<>();
+        //ArrayList<DiagramShape> pointMarkers = new ArrayList<>();
 
         shapes.sort(new ShapeAreaComparator());
 
-        for (DiagramShape shape : shapes) {
+        List<DiagramShape> storageShapes = shapes.stream()
+                .filter(shape -> shape.getType() == DiagramShape.TYPE_STORAGE)
+                .collect(Collectors.toList());
+        List<DiagramShape> pointMarkers = shapes.stream()
+                .filter(shape -> shape.getType() == DiagramShape.TYPE_POINT_MARKER)
+                .collect(Collectors.toList());
+        List<DiagramShape> customShapes = shapes.stream()
+                .filter(shape -> shape.getType() == DiagramShape.TYPE_CUSTOM)
+                .collect(Collectors.toList());
+        List<DiagramShape> otherShapes = shapes.stream()
+                .filter(shape -> shape.getType() != DiagramShape.TYPE_CUSTOM
+                        && shape.getType() != DiagramShape.TYPE_STORAGE
+                        && shape.getType() != DiagramShape.TYPE_POINT_MARKER
+                        && !shape.getPoints().isEmpty())
+                .collect(Collectors.toList());
 
-            if (shape.getType() == DiagramShape.TYPE_POINT_MARKER) {
-                pointMarkers.add(shape);
-                continue;
-            }
-            if (shape.getType() == DiagramShape.TYPE_STORAGE) {
-                continue;
-            }
-            if (shape.getType() == DiagramShape.TYPE_CUSTOM) {
-                //renderCustomShape(shape, g2);
-                //continue;
-                throw new RuntimeException("Not yet implemented");
-            }
-
-            if (shape.getPoints().isEmpty()) continue;
-
+        if (!customShapes.isEmpty()) throw new RuntimeException("Not yet implemented");
+        for (DiagramShape shape : otherShapes) {
             GeneralPath path = shape.makeIntoRenderPath(diagram, options);
-
             SVGCommands commands = new SVGCommands(path);
-
             renderPath(shape, commands);
-
         }
-
+        renderStorageShapes(storageShapes);
         renderPointMarkers(pointMarkers);
-
     }
 
     private void renderPath(DiagramShape shape, SVGCommands commands) {
@@ -196,7 +182,7 @@ public class SVGBuilder {
 
         if (shape.isClosed() && !shape.isStrokeDashed()) {
 
-            if(shape.getFillColor() != null)
+            if (shape.getFillColor() != null)
                 fill = colorToHex(shape.getFillColor());
             else
                 fill = "white";
@@ -246,21 +232,14 @@ public class SVGBuilder {
 
     }
 
-    private void renderPointMarkers(ArrayList<DiagramShape> pointMarkers) {
-
+    private void renderPointMarkers(List<DiagramShape> pointMarkers) {
         for (DiagramShape shape : pointMarkers) {
-
             GeneralPath path = shape.makeIntoRenderPath(diagram, options);
-
             String fill = "white";
-
-            if(shape.getFillColor() != null)
+            if (shape.getFillColor() != null)
                 fill = colorToHex(shape.getFillColor());
-
             renderPath(shape, new SVGCommands(path), colorToHex(shape.getStrokeColor()), fill);
-
         }
-
     }
 
     private String antialiasing() {
@@ -269,25 +248,19 @@ public class SVGBuilder {
     }
 
     private void backgroundLayer() {
-
         Color color = options.getBackgroundColor();
-
         if (color.getAlpha() == 0) return;
-
-        layer0.append (
+        layer0.append(
                 String.format("    <rect x='0' y='0' width='%d' height='%d' style='fill: %s'/>\n",
                         diagram.getWidth(),
                         diagram.getHeight(),
                         colorToHex(color)
                 )
         );
-
     }
 
     private void renderTexts() {
-
         for (DiagramText diagramText : diagram.getTextObjects()) {
-
             Font font = diagramText.getFont();
             String text = diagramText.getText();
 
@@ -297,7 +270,6 @@ public class SVGBuilder {
             renderText(text, xPos, yPos, font, diagramText.getColor());
 
             if (diagramText.hasOutline()) {
-
                 Color outlineColor = diagramText.getOutlineColor();
 
                 renderText(text, xPos + 1, yPos, font, outlineColor);
@@ -323,41 +295,16 @@ public class SVGBuilder {
 
         layer3.append(
                 String.format(TEXT_ELEMENT,
-                    xPos,
-                    yPos,
-                    options.getFontFamily(),
-                    font.getSize(),
-                    colorToHex(color),
-                    text
+                        xPos,
+                        yPos,
+                        options.getFontFamily(),
+                        font.getSize(),
+                        colorToHex(color),
+                        text
                 )
         );
 
     }
-
-    private static String colorToHex(Color color) {
-        return String.format("#%s%s%s",
-                toHex(color.getRed()),
-                toHex(color.getGreen()),
-                toHex(color.getBlue())
-        );
-    }
-
-    private static String toHex(int n) {
-        String hex = Integer.toHexString(n);
-
-        return n > 15 ? hex : "0" + hex;
-    }
-
-    private final Diagram diagram;
-    private final RenderingOptions options;
-
-    private final StringBuilder layer0 = new StringBuilder();
-    private final StringBuilder layer1 = new StringBuilder();
-    private final StringBuilder layer2 = new StringBuilder();
-    private final StringBuilder layer3 = new StringBuilder();
-
-    private final String normalStroke;
-    private final String dashStroke;
 
     class SVGCommands {
 
@@ -378,7 +325,7 @@ public class SVGBuilder {
 
                 String commands;
 
-                switch(pathIterator.currentSegment(coords)) {
+                switch (pathIterator.currentSegment(coords)) {
                     case PathIterator.SEG_MOVETO:
                         commands = "M" + coords[0] + " " + coords[1] + " ";
                         break;

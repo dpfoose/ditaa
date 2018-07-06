@@ -1,213 +1,210 @@
 /**
  * ditaa - Diagrams Through Ascii Art
- * 
+ * <p>
  * Copyright (C) 2004-2011 Efstathios Sideris
- *
+ * <p>
  * ditaa is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as 
+ * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of
  * the License, or (at your option) any later version.
- *
+ * <p>
  * ditaa is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public
  * License along with ditaa.  If not, see <http://www.gnu.org/licenses/>.
- *   
  */
 package org.stathissideris.ascii2image.graphics;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 /**
- * 
+ *
  * @author Efstathios Sideris
  */
 public class DiagramText extends DiagramComponent {
 
-	public static final Color DEFAULT_COLOR = Color.black;
-	
-	private String text;
-	private Font font;
-	private int xPos, yPos;
-	private Color color = Color.black;
-	private boolean isTextOnLine = false;
-	private boolean hasOutline = false;
-	private Color outlineColor = Color.white;
+    public static final Color DEFAULT_COLOR = Color.black;
 
-	/**
+    private String text;
+    private Font font;
+    private int xPos, yPos;
+    private Color color = Color.black;
+    private boolean isTextOnLine = false;
+    private boolean hasOutline = false;
+    private Color outlineColor = Color.white;
+
+    /**
      * Initialize DiagramText with parameters
-	 * @param x
-	 * @param y
-	 * @param text
-	 * @param font
-	 */
-	public DiagramText(int x, int y, String text, Font font){
-		if(text == null) throw new IllegalArgumentException("DiagramText cannot be initialised with a null string");
-		if(font == null) throw new IllegalArgumentException("DiagramText cannot be initialised with a null font");
+     * @param x
+     * @param y
+     * @param text
+     * @param font
+     */
+    public DiagramText(int x, int y, String text, Font font) {
+        if (text == null) throw new IllegalArgumentException("DiagramText cannot be initialised with a null string");
+        if (font == null) throw new IllegalArgumentException("DiagramText cannot be initialised with a null font");
 
-		this.xPos = x;
-		this.yPos = y;
-		this.text = text;
-		this.font = font;
-	}
+        this.xPos = x;
+        this.yPos = y;
+        this.text = text;
+        this.font = font;
+    }
 
-	public void centerInBounds(Rectangle2D bounds){
-		centerHorizontallyBetween((int) bounds.getMinX(), (int) bounds.getMaxX());
-		centerVerticallyBetween((int) bounds.getMinY(), (int) bounds.getMaxY());
-	}
+    public void centerInBounds(Rectangle2D bounds) {
+        centerHorizontallyBetween((int) bounds.getMinX(), (int) bounds.getMaxX());
+        centerVerticallyBetween((int) bounds.getMinY(), (int) bounds.getMaxY());
+    }
 
-	/**
+    /**
      * Center-Align text horizontally
-	 * @param minX
-	 * @param maxX
-	 */
-	public void centerHorizontallyBetween(int minX, int maxX){
-		int width = FontMeasurer.instance().getWidthFor(text, font);
-		int center = Math.abs(maxX - minX) / 2;
-		xPos += Math.abs(center - width / 2);
-		
-	}
+     * @param minX
+     * @param maxX
+     */
+    public void centerHorizontallyBetween(int minX, int maxX) {
+        int width = FontMeasurer.instance().getWidthFor(text, font);
+        int center = Math.abs(maxX - minX) / 2;
+        xPos += Math.abs(center - width / 2);
 
-	/**
-	 * Center-Align text vertically
-	 * @param minY
-	 * @param maxY
-	 */
-	public void centerVerticallyBetween(int minY, int maxY){
-		int zHeight = FontMeasurer.instance().getZHeight(font);
-		int center = Math.abs(maxY - minY) / 2;
-		yPos -= Math.abs(center - zHeight / 2);
-	}
+    }
 
-	/**
+    /**
+     * Center-Align text vertically
+     * @param minY
+     * @param maxY
+     */
+    public void centerVerticallyBetween(int minY, int maxY) {
+        int zHeight = FontMeasurer.instance().getZHeight(font);
+        int center = Math.abs(maxY - minY) / 2;
+        yPos -= Math.abs(center - zHeight / 2);
+    }
+
+    /**
      * Right-align text at <code>x</code>
-	 * @param x
-	 */
-	public void alignRightEdgeTo(int x){
-		int width = FontMeasurer.instance().getWidthFor(text, font);
-		xPos = x - width;
-	}
+     * @param x
+     */
+    public void alignRightEdgeTo(int x) {
+        int width = FontMeasurer.instance().getWidthFor(text, font);
+        xPos = x - width;
+    }
 
 
-	/**
-	 * @return
-	 */
-	public Color getColor() {
-		return color;
-	}
+    /**
+     * @return
+     */
+    public Color getColor() {
+        return color;
+    }
 
-	/**
-	 * @return
-	 */
-	public Font getFont() {
-		return font;
-	}
+    /**
+     * @param color
+     */
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
-	/**
-	 * @return
-	 */
-	public String getText() {
-		return text;
-	}
+    /**
+     * @return
+     */
+    public Font getFont() {
+        return font;
+    }
 
-	/**
-	 * @return
-	 */
-	public int getXPos() {
-		return xPos;
-	}
+    /**
+     * @param font
+     */
+    public void setFont(Font font) {
+        this.font = font;
+    }
 
-	/**
-	 * @return
-	 */
-	public int getYPos() {
-		return yPos;
-	}
+    /**
+     * @return
+     */
+    public String getText() {
+        return text;
+    }
 
-	/**
-	 * @param color
-	 */
-	public void setColor(Color color) {
-		this.color = color;
-	}
+    /**
+     * @param string
+     */
+    public void setText(String string) {
+        text = string;
+    }
 
-	/**
-	 * @param font
-	 */
-	public void setFont(Font font) {
-		this.font = font;
-	}
+    /**
+     * @return
+     */
+    public int getXPos() {
+        return xPos;
+    }
 
-	/**
-	 * @param string
-	 */
-	public void setText(String string) {
-		text = string;
-	}
+    /**
+     * @param i
+     */
+    public void setXPos(int i) {
+        xPos = i;
+    }
 
-	/**
-	 * @param i
-	 */
-	public void setXPos(int i) {
-		xPos = i;
-	}
+    /**
+     * @return
+     */
+    public int getYPos() {
+        return yPos;
+    }
 
-	/**
-	 * @param i
-	 */
-	public void setYPos(int i) {
-		yPos = i;
-	}
+    /**
+     * @param i
+     */
+    public void setYPos(int i) {
+        yPos = i;
+    }
 
-	public Rectangle2D getBounds(){
-		Rectangle2D bounds = FontMeasurer.instance().getBoundsFor(text, font);
-		bounds.setRect(
-			bounds.getMinX() + xPos,
-			bounds.getMinY() + yPos,
-			bounds.getWidth(),
-			bounds.getHeight());
-		return bounds;
-	}
-	
-	public String toString(){
-		return "DiagramText, at ("+xPos+", "+yPos+"), within "+getBounds()+" '"+text+"', "+color+" "+font;
-	}
+    public Rectangle2D getBounds() {
+        Rectangle2D bounds = FontMeasurer.instance().getBoundsFor(text, font);
+        bounds.setRect(
+                bounds.getMinX() + xPos,
+                bounds.getMinY() + yPos,
+                bounds.getWidth(),
+                bounds.getHeight());
+        return bounds;
+    }
 
-	/**
-	 * @return
-	 */
-	public boolean isTextOnLine() {
-		return isTextOnLine;
-	}
+    public String toString() {
+        return "DiagramText, at (" + xPos + ", " + yPos + "), within " + getBounds() + " '" + text + "', " + color + " " + font;
+    }
 
-	/**
-	 * @param b
-	 */
-	public void setTextOnLine(boolean b) {
-		isTextOnLine = b;
-	}
+    /**
+     * @return
+     */
+    public boolean isTextOnLine() {
+        return isTextOnLine;
+    }
 
-	public boolean hasOutline() {
-		return hasOutline;
-	}
+    /**
+     * @param b
+     */
+    public void setTextOnLine(boolean b) {
+        isTextOnLine = b;
+    }
 
-	public void setHasOutline(boolean hasOutline) {
-		this.hasOutline = hasOutline;
-	}
+    public boolean hasOutline() {
+        return hasOutline;
+    }
 
-	public Color getOutlineColor() {
-		return outlineColor;
-	}
+    public void setHasOutline(boolean hasOutline) {
+        this.hasOutline = hasOutline;
+    }
 
-	public void setOutlineColor(Color outlineColor) {
-		this.outlineColor = outlineColor;
-	}
+    public Color getOutlineColor() {
+        return outlineColor;
+    }
 
-	
+    public void setOutlineColor(Color outlineColor) {
+        this.outlineColor = outlineColor;
+    }
+
+
 }

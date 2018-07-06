@@ -17,6 +17,7 @@ public class SVGRenderer extends AbstractRenderer {
 
     /**
      * Construct SVG string from <code>diagram</code>
+     *
      * @param diagram
      * @return
      */
