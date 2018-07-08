@@ -34,4 +34,7 @@ public abstract class AbstractRenderer {
     }
 
     abstract public void renderImage(Diagram d);
+    private void render() {
+
+    }
 }
