@@ -44,6 +44,7 @@ import org.stathissideris.ascii2image.graphics.Diagram;
 import org.stathissideris.ascii2image.graphics.ImageHandler;
 import org.stathissideris.ascii2image.graphics.SVGRenderer;
 import org.stathissideris.ascii2image.text.TextGrid;
+import se.ngm.ditaaeps.EpsRenderer;
 
 /**
  * If ran as a Java application, it produces an HTML report for manual 
@@ -77,6 +78,8 @@ public class VisualTester {
 	public void compareImages() throws IOException {
 		ConversionOptions options = new ConversionOptions();
 		File actualFile = new File(actualDir + File.separator + textFile.getName() + ".png");
+		File actualSVGFile = new File(actualDir + File.separator + textFile.getName() + ".svg");
+		File actualEPSFile = new File(actualDir + File.separator + textFile.getName() + ".eps");
 		File expectedFile = new File(expectedDir + File.separator + textFile.getName() + ".png");
 
 		System.out.println(index + ") Rendering "+textFile+" to "+actualFile);
@@ -91,7 +94,9 @@ public class VisualTester {
 		Diagram diagram = new Diagram(grid, options);
 
 		new BitmapRenderer(actualFile.getAbsolutePath(), options.renderingOptions).renderImage(diagram);
-	
+		new SVGRenderer(actualSVGFile.getAbsolutePath(), options.renderingOptions).renderImage(diagram);
+		new EpsRenderer(actualEPSFile.getAbsolutePath(), options.renderingOptions).renderImage(diagram);
+
 		//compare images pixel-by-pixel
 		BufferedImage actualImage = ImageHandler.instance().loadBufferedImage(actualFile);
 		BufferedImage expectedImage = ImageHandler.instance().loadBufferedImage(expectedFile);
@@ -117,7 +122,7 @@ public class VisualTester {
 		
 		assertTrue("Images for "+textFile.getName()+" are not pixel-identical, first different pixel at: "+x+","+y, pixelsEqual);
 	}
-	
+
 	public VisualTester(File textFile, int index) {
 		this.textFile = textFile;
 		this.index = index;

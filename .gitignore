@@ -6,6 +6,7 @@
 # IntelliJ
 .idea/
 *.iml
+*.txt
 *.ipr
 *.iws
 
@@ -14,6 +15,8 @@ bin/
 build/jar-temp/
 build/testclasses/
 releases/
+test-resources/
+tests/images-expected/
 tests/images/
 tests/images-expected/
 target/
